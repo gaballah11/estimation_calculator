@@ -88,7 +88,7 @@ class _homeScreenState extends State<homeScreen> {
                       color: Colors.white,
                       size: (sz.width / 10) * 2,
                     ), () {
-                  print("button pressedsadasdsa");
+                  print("button pressedsadasdsawrqrqasasassdqd");
                   Navigator.of(context).pushNamed(playersSc.routename);
                 }),
               ),
