@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:estimation_calculator/modules/player.dart';
+import 'package:estimation_calculator/screens/setting.dart';
 import 'package:estimation_calculator/widgets/button.dart';
 import 'package:estimation_calculator/widgets/swiper.dart';
 import 'package:estimation_calculator/screens/game.dart';
@@ -22,7 +23,8 @@ class _playersScState extends State<playersSc> {
   TextEditingController playername = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _swiperkey = GlobalKey<charachterSwiperState>();
-  final _scaffoldKey = GlobalKey();
+  GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
+  final _stackKey = GlobalKey();
   List<String> characters = [];
   List<Player> players = [];
   List<Player> selected = [];
@@ -42,9 +44,10 @@ class _playersScState extends State<playersSc> {
   Widget build(BuildContext context) {
     final sz = MediaQuery.of(context).size;
     return Scaffold(
-      key: _scaffoldKey,
+      key: _scaffoldkey,
       backgroundColor: const Color.fromRGBO(255, 255, 255, 1.0),
       body: Stack(
+        key: _stackKey,
         alignment: Alignment.center,
         children: [
           Container(
@@ -98,6 +101,7 @@ class _playersScState extends State<playersSc> {
                         () {
                           print(sz);
                           print(sz.aspectRatio);
+                          showDropDownMenuAlert(context);
                         },
                       ),
                     ),
@@ -130,13 +134,12 @@ class _playersScState extends State<playersSc> {
                     children: players.map((e) {
                       return GestureDetector(
                         onTap: () {
-                          
                           print(selected.length);
                           if (selected.contains(e)) {
                             setState(() {
                               selected.remove(e);
                             });
-                          }else{
+                          } else {
                             if (selected.length < 4) {
                               setState(() {
                                 selected.add(e);
@@ -152,7 +155,6 @@ class _playersScState extends State<playersSc> {
                               print(selected);
                             }
                           }
-
                         },
                         child: Card(
                           elevation: 10,
@@ -246,35 +248,35 @@ class _playersScState extends State<playersSc> {
               height: 80,
               child: selected.length < 4
                   ? ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Container(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Container(
                         foregroundDecoration: const BoxDecoration(
                           color: Colors.grey,
                           backgroundBlendMode: BlendMode.saturation,
                         ),
-                      child: button(
-                        Container(
-                          margin: EdgeInsets.only(top: 4, left: 4),
-                          width: 40,
-                          height: 40,
-                          alignment: Alignment.center,
-                          child: Icon(
-                            Icons.play_arrow_rounded,
-                            color: Colors.white,
-                            size: sz.width / 10,
+                        child: button(
+                          Container(
+                            margin: EdgeInsets.only(top: 4, left: 4),
+                            width: 40,
+                            height: 40,
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.play_arrow_rounded,
+                              color: Colors.white,
+                              size: sz.width / 10,
+                            ),
                           ),
+                          () {
+                            Fluttertoast.cancel();
+                            Fluttertoast.showToast(
+                              msg: "Select 4 players to start",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                            );
+                          },
                         ),
-                            () {
-                              Fluttertoast.cancel();
-                              Fluttertoast.showToast(
-                                msg: "Select 4 players to start",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                              );
-                            },
                       ),
-                    ),
-                  )
+                    )
                   : button(
                       Container(
                         margin: EdgeInsets.only(top: 4, left: 4),
@@ -288,7 +290,8 @@ class _playersScState extends State<playersSc> {
                         ),
                       ),
                       () {
-                        Navigator.of(context).pushNamed(gameSc.routename, arguments: selected);
+                        Navigator.of(context)
+                            .pushNamed(gameSc.routename, arguments: selected);
                       },
                     ),
             ),
@@ -450,5 +453,78 @@ class _playersScState extends State<playersSc> {
       players = [];
     }
     print(players);
+  }
+
+  ListTile buildlistTile(String title, Widget icon, Function funct) {
+    return ListTile(
+      leading: icon,
+      title: Text(
+        title,
+        style: TextStyle(
+          fontFamily: 'Lucida',
+          fontSize: 18,
+          color: Colors.white,
+          fontStyle: FontStyle.italic,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      onTap: () => funct(),
+    );
+  }
+
+  Future<void> showDropDownMenuAlert(BuildContext context) async {
+    AlertDialog alert = AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(40),
+        side: BorderSide(
+          color: Colors.white,
+          width: 3,
+        ),
+      ),
+      backgroundColor: const Color.fromRGBO(200, 0, 3, 1.0),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          buildlistTile(
+              "Settings",
+              Icon(
+                Icons.settings,
+                color: Colors.white,
+              ), () {
+            Navigator.of(context).pushNamed(settingSc.routename);
+          }),
+          Divider(),
+          buildlistTile(
+              "Statistics",
+              Icon(
+                Icons.trending_up_rounded,
+                color: Colors.white,
+              ),
+              () {}),
+          Divider(),
+          buildlistTile(
+            "Rules",
+            Icon(
+              Icons.paste,
+              color: Colors.white,
+            ),
+            () {},
+          )
+        ],
+      ),
+    );
+
+    await showDialog(
+      barrierColor: Colors.black.withOpacity(0),
+      context: context,
+      builder: (BuildContext ctx) {
+        final sz = MediaQuery.of(context).size;
+        return Container(
+          margin:
+              EdgeInsets.only(bottom: sz.height * 0.4, right: sz.width * 0.15),
+          child: alert,
+        );
+      },
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:estimation_calculator/screens/home.dart';
 import 'package:estimation_calculator/screens/players.dart';
 import 'package:estimation_calculator/screens/game.dart';
+import 'package:estimation_calculator/screens/setting.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       routes: {
         playersSc.routename: (context) => playersSc(),
         gameSc.routename: (context) => gameSc(),
+        settingSc.routename : (context) => settingSc(),
       },
       theme: ThemeData(
         primarySwatch: Colors.red,
