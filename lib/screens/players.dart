@@ -150,7 +150,7 @@ class _playersScState extends State<playersSc> {
                               Fluttertoast.showToast(
                                 msg: "You can't add more than 4 players",
                                 toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
+                                gravity: ToastGravity.BOTTOM,
                               );
                               print(selected);
                             }
@@ -271,7 +271,7 @@ class _playersScState extends State<playersSc> {
                             Fluttertoast.showToast(
                               msg: "Select 4 players to start",
                               toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER,
+                              gravity: ToastGravity.BOTTOM,
                             );
                           },
                         ),
@@ -326,10 +326,22 @@ class _playersScState extends State<playersSc> {
               key: _formKey,
               child: Column(
                 children: [
-                  charachterSwiper(
-                    MediaQuery.of(context).size,
-                    key: _swiperkey,
+                  Container(
+                    child: charachterSwiper(
+                      MediaQuery.of(context).size,
+                      key: _swiperkey,
+                    ),
                   ),
+                  const Text(
+                      "Swipe to choose your charachter",
+                    style: TextStyle(
+                      fontFamily: "Lucida",
+                      fontStyle: FontStyle.italic,
+                      fontSize: 15,
+                      color: Colors.black45,
+                    ),
+                  ),
+                  Divider(height: 20,),
                   TextFormField(
                     style: TextStyle(
                       fontFamily: "Lucida",
@@ -452,7 +464,6 @@ class _playersScState extends State<playersSc> {
     } else {
       players = [];
     }
-    print(players);
   }
 
   ListTile buildlistTile(String title, Widget icon, Function funct) {
