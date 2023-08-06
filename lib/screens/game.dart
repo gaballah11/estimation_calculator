@@ -304,7 +304,7 @@ class _gameScState extends ConsumerState<gameSc> {
                     }
                     biddingW? endround(rounds.last):addNewRound(Gargs);
                     ref.read(biddingProvider.notifier).state=!biddingW;
-                    _incrementCounter();
+
                   },
                   tooltip: 'Bids',
                   child: biddingW?Icon(Icons.done_rounded, size:40.0):Icon(Icons.add_rounded, size:40.0),
@@ -318,15 +318,6 @@ class _gameScState extends ConsumerState<gameSc> {
 
   }
 
-   void _incrementCounter() {
-
-
-
-     setState(() {
-       bidding = !bidding;
-     });
-     print(bidding);
-   }
 
   Future<void> addNewRound(List<Player> args) async {
     try{
@@ -587,7 +578,7 @@ class _alert2State extends ConsumerState<alert2> {
     }
 
     int wins = winStatus.sum;
-
+    print(wins);
     for(int i=0;i<winStatus.length;++i){
       if(winStatus[i] ==1){ //win
 
@@ -827,13 +818,9 @@ class alertState extends ConsumerState<alert> with AutomaticKeepAliveClientMixin
 
                                               FocusScope.of(context).unfocus();
                                               ref.read(playersProvider.notifier).toggleIsCall(indx);
-                                              if(players.state[indx].isCall){
-                                                for(int i=0;i<players.state.length;++i){
-                                                  if(i!=indx){ players.state[i].isCall=false; }
-                                                }
-                                              }
 
-                                            }),
+                                            }
+                                            ),
                                       ),
 
                                       players.state[indx].isCall ? DropdownButton(
