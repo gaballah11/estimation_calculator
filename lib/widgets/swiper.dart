@@ -31,22 +31,15 @@ class charachterSwiperState extends State<charachterSwiper> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: sz.height/4.5,
-      width: sz.width/1.5,
+      height: sz.height / 4.5,
+      width: sz.width / 1.5,
       child: PageView.builder(
-          controller: PageController(viewportFraction: 0.88),
-          itemCount: 19,
+          //allowImplicitScrolling: false,
+          controller: PageController(viewportFraction: 0.5, initialPage: 19),
+          //itemCount: 19,
           itemBuilder: (_, curr) {
-            currentIndex = curr-1;
-            return GestureDetector(
-                child: Container(
-                    padding: const EdgeInsets.only(left: 20),
-                    margin: const EdgeInsets.only(right: 10),
-                    height: sz.height/4,
-                    width: sz.width/2,
-                    child: Image.asset(charList[curr])
-                )
-            );
+            currentIndex = curr - 1;
+            return Image.asset(charList[curr % 19]);
           }),
     );
   }

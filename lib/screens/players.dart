@@ -45,7 +45,7 @@ class _playersScState extends State<playersSc> {
     final sz = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldkey,
-      backgroundColor: const Color.fromRGBO(255, 255, 255, 1.0),
+      //backgroundColor: const Color.fromRGBO(255, 255, 255, 1.0),
       body: Stack(
         key: _stackKey,
         alignment: Alignment.center,
@@ -56,8 +56,7 @@ class _playersScState extends State<playersSc> {
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
               colors: [
-                Color.fromRGBO(255, 255, 255, 1.0),
-                Color.fromRGBO(255, 255, 255, 0.5),
+                Color.fromRGBO(0, 0, 0, 0.0),
                 Color.fromRGBO(127, 0, 3, 0.5)
               ],
               begin: Alignment(0.0, 0.0),
@@ -88,6 +87,7 @@ class _playersScState extends State<playersSc> {
                       width: 80,
                       height: 80,
                       child: button(
+                        "Menu",
                         Container(
                           margin: EdgeInsets.only(top: 8, left: 8),
                           width: 40,
@@ -95,12 +95,15 @@ class _playersScState extends State<playersSc> {
                           child: Icon(
                             Icons.short_text_rounded,
                             color: Colors.white,
-                            size: sz.width / 10,
+                            size: sz.width * 0.07,
                           ),
                         ),
                         () {
                           print(sz);
                           print(sz.aspectRatio);
+
+                          setState(() {});
+
                           showDropDownMenuAlert(context);
                         },
                       ),
@@ -108,10 +111,12 @@ class _playersScState extends State<playersSc> {
                     const SizedBox(
                       width: 20,
                     ),
-                    const Text(
+                    Text(
                       "SELECT PLAYERS",
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
                         fontFamily: "Lucida",
                         fontStyle: FontStyle.italic,
                         fontWeight: FontWeight.w600,
@@ -148,10 +153,12 @@ class _playersScState extends State<playersSc> {
                               print("more than 4");
                               Fluttertoast.cancel();
                               Fluttertoast.showToast(
-                                msg: "You can't add more than 4 players",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                              );
+                                  msg: "You can't add more than 4 players",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  fontSize: 18,
+                                  backgroundColor:
+                                      Color.fromRGBO(200, 0, 3, 0.5));
                               print(selected);
                             }
                           }
@@ -167,8 +174,11 @@ class _playersScState extends State<playersSc> {
                                 : BorderSide.none,
                           ),
                           child: Stack(
+                            alignment: Alignment.topRight,
                             children: [
                               Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Image.asset(
                                     e.imgAsset,
@@ -182,34 +192,123 @@ class _playersScState extends State<playersSc> {
                                         shape: BoxShape.rectangle,
                                         borderRadius: BorderRadius.vertical(
                                             bottom: Radius.circular(40.0))),
-                                    alignment: Alignment.center,
+                                    alignment: Alignment.topCenter,
                                     padding: EdgeInsets.all(7),
-                                    width: double.infinity,
+                                    //width: double.infinity,
+                                    height: 37.5,
                                     child: Text(
                                       e.name,
                                       style: const TextStyle(
+                                        overflow: TextOverflow.ellipsis,
                                         color: Colors.white,
                                         fontFamily: "Lucida",
                                         fontStyle: FontStyle.italic,
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 20,
+                                        fontSize: 18,
                                       ),
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                               Align(
-                                  alignment: Alignment(-0.8, -0.8),
-                                  child: selected.contains(e)
-                                      ? Icon(
-                                          Icons.check_circle_rounded,
-                                          size: sz.width * 0.06,
-                                          color: Color.fromRGBO(200, 0, 3, 1.0),
-                                        )
-                                      : Icon(
-                                          Icons.check_circle_outline_rounded,
-                                          size: sz.width * 0.06,
-                                        ))
+                                alignment: Alignment(-0.8, -0.8),
+                                child: selected.contains(e)
+                                    ? Icon(
+                                        Icons.check_circle_rounded,
+                                        size: sz.width * 0.06,
+                                        color: Color.fromRGBO(200, 0, 3, 1.0),
+                                      )
+                                    : Icon(
+                                        Icons.check_circle_outline_rounded,
+                                        size: sz.width * 0.06,
+                                      ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(40.0)),
+                                        ),
+                                        actionsAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        contentPadding: EdgeInsets.all(20.0),
+                                        content: Text(
+                                          "Are you sure you want delete that player?",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontFamily: "Lucida",
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        actions: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            40)),
+                                                child: Text("NO",
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ))),
+                                            style: ButtonStyle(
+                                                shape: MaterialStateProperty
+                                                    .all(RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    40.0)))),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () async {
+                                              setState(() {
+                                                players.remove(e);
+                                                selected.remove(e);
+                                              });
+                                              addPlayersToDatabase();
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            40)),
+                                                child: Text("YES",
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ))),
+                                            style: ButtonStyle(
+                                                shape: MaterialStateProperty
+                                                    .all(RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    40.0)))),
+                                          )
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                icon: Icon(Icons.remove_circle_outline_rounded),
+                                color: Color.fromRGBO(200, 0, 3, 1.0),
+                              )
                             ],
                           ),
                         ),
@@ -224,6 +323,7 @@ class _playersScState extends State<playersSc> {
               width: 80,
               height: 80,
               child: button(
+                "new",
                 Container(
                   margin: EdgeInsets.only(top: 4, left: 4),
                   width: 40,
@@ -232,7 +332,7 @@ class _playersScState extends State<playersSc> {
                   child: Icon(
                     Icons.add_rounded,
                     color: Colors.white,
-                    size: sz.width / 10,
+                    size: sz.width * 0.07,
                   ),
                 ),
                 () {
@@ -255,6 +355,7 @@ class _playersScState extends State<playersSc> {
                           backgroundBlendMode: BlendMode.saturation,
                         ),
                         child: button(
+                          "play",
                           Container(
                             margin: EdgeInsets.only(top: 4, left: 4),
                             width: 40,
@@ -263,21 +364,24 @@ class _playersScState extends State<playersSc> {
                             child: Icon(
                               Icons.play_arrow_rounded,
                               color: Colors.white,
-                              size: sz.width / 10,
+                              size: sz.width * 0.07,
                             ),
                           ),
                           () {
                             Fluttertoast.cancel();
                             Fluttertoast.showToast(
-                              msg: "Select 4 players to start",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                            );
+                                msg: "Select 4 players to start",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                fontSize: 18,
+                                backgroundColor:
+                                    Color.fromRGBO(200, 0, 3, 0.5));
                           },
                         ),
                       ),
                     )
                   : button(
+                      "play",
                       Container(
                         margin: EdgeInsets.only(top: 4, left: 4),
                         width: 40,
@@ -326,14 +430,8 @@ class _playersScState extends State<playersSc> {
               key: _formKey,
               child: Column(
                 children: [
-                  Container(
-                    child: charachterSwiper(
-                      MediaQuery.of(context).size,
-                      key: _swiperkey,
-                    ),
-                  ),
                   const Text(
-                      "Swipe to choose your charachter",
+                    "Swipe to choose your charachter",
                     style: TextStyle(
                       fontFamily: "Lucida",
                       fontStyle: FontStyle.italic,
@@ -341,7 +439,15 @@ class _playersScState extends State<playersSc> {
                       color: Colors.black45,
                     ),
                   ),
-                  Divider(height: 20,),
+                  Container(
+                    child: charachterSwiper(
+                      MediaQuery.of(context).size,
+                      key: _swiperkey,
+                    ),
+                  ),
+                  Divider(
+                    height: 20,
+                  ),
                   TextFormField(
                     style: TextStyle(
                       fontFamily: "Lucida",
@@ -354,8 +460,8 @@ class _playersScState extends State<playersSc> {
                     controller: playername,
                     validator: (val) {
                       final photoIndx = _swiperkey.currentState!.currentIndex;
-                      Player p =
-                          Player(name: val!, imgAsset: characters[photoIndx]);
+                      Player p = Player(
+                          name: val!, imgAsset: characters[photoIndx % 19]);
                       if (val.length < 3) {
                         return "name should be more than 3 characters";
                       } else if (players.contains(p)) {
@@ -388,7 +494,8 @@ class _playersScState extends State<playersSc> {
                   if (_formKey.currentState!.validate()) {
                     final photoIndx = _swiperkey.currentState!.currentIndex;
                     Player p = Player(
-                        name: playername.text, imgAsset: characters[photoIndx]);
+                        name: playername.text,
+                        imgAsset: characters[photoIndx % 19]);
                     //print("Player : ${p.name} , ${p.imgAsset}");
                     Navigator.pop(context, p);
                   }
@@ -438,7 +545,9 @@ class _playersScState extends State<playersSc> {
     );
     if (newPlayer != null) {
       print(newPlayer.name + " " + newPlayer.imgAsset);
-      players.add(newPlayer);
+      setState(() {
+        players.add(newPlayer);
+      });
 
       addPlayersToDatabase();
     }

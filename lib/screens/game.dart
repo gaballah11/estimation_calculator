@@ -26,7 +26,9 @@ class gameSc extends ConsumerStatefulWidget {
 late var Gargs = null;
 late List<inGamePlayer> players;
 
-List<String> latestScore = [" ", " ", " ", " "];
+List<List<int>> roundsScores = [
+  [0, 0, 0, 0]
+];
 
 class _gameScState extends ConsumerState<gameSc> {
   List<List<inGamePlayer>> rounds = [];
@@ -112,170 +114,285 @@ class _gameScState extends ConsumerState<gameSc> {
             )),
         Container(
           margin:
-              const EdgeInsets.only(top: 210, left: 25, right: 25, bottom: 20),
+              const EdgeInsets.only(top: 230, left: 25, right: 25, bottom: 20),
           height: sz.height * 0.7,
           child: ListView.builder(
             itemCount: rounds.length,
             itemBuilder: (_, indx) {
-              return Container(
-                width: sz.width / 1.2,
-                height: 80,
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.black12,
-                ),
-                child: Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: indx == rounds.length - 1
-                          ? () {
-                              showDialog(
-                                  context: context,
-                                  builder: (ctx) {
-                                    return AlertDialog(
-                                      actionsAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      contentPadding: EdgeInsets.all(20.0),
-                                      content: Text(
-                                        "Are you sure you want to remove round #${indx + 1} ?",
-                                        textAlign: TextAlign.center,
+              return Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  Container(
+                    width: sz.width / 1.2,
+                    height: 80,
+                    margin: const EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.black12,
+                    ),
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: indx == rounds.length - 1
+                              ? () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (ctx) {
+                                        return AlertDialog(
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(40.0)),
+                                          ),
+                                          actionsAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          contentPadding: EdgeInsets.all(20.0),
+                                          content: Text(
+                                            "Are you sure you want to remove round #${indx + 1} ?",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontFamily: "Lucida",
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          actions: [
+                                            ElevatedButton(
+                                              style: ButtonStyle(
+                                                  shape: MaterialStateProperty
+                                                      .all(RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      40.0)))),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Container(
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              40)),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                                  child: Text("NO",
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ))),
+                                            ),
+                                            ElevatedButton(
+                                              style: ButtonStyle(
+                                                  shape: MaterialStateProperty
+                                                      .all(RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      40.0)))),
+                                              onPressed: () {
+                                                setState(() {
+                                                  rounds.removeAt(indx);
+                                                  ref
+                                                              .read(
+                                                                  biddingProvider
+                                                                      .notifier)
+                                                              .state ==
+                                                          true
+                                                      ? () {}
+                                                      : roundsScores
+                                                          .removeAt(indx + 1);
+                                                });
+                                                ref
+                                                    .read(biddingProvider
+                                                        .notifier)
+                                                    .state = false;
+
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              40)),
+                                                  child: Text("YES",
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ))),
+                                            ),
+                                          ],
+                                        );
+                                      });
+                                }
+                              : () {},
+                          style: ButtonStyle(
+                            backgroundColor: indx == rounds.length - 1
+                                ? MaterialStateProperty.all(
+                                    Colors.redAccent.withOpacity(0.4))
+                                : MaterialStateProperty.all(
+                                    Colors.black87.withOpacity(0.4)),
+                            minimumSize: MaterialStateProperty.all(Size.zero),
+                            shape: MaterialStateProperty.all(CircleBorder()),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              (indx + 1).toString(),
+                              style: TextStyle(
+                                fontFamily: "Lucida",
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              softWrap: false,
+                            ),
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: rounds[indx].map((e) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        e.bid.toString(),
                                         style: TextStyle(
+                                          color: Colors.black,
                                           fontFamily: "Lucida",
-                                          fontSize: 20,
+                                          fontSize: 14,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                      actions: [
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10),
-                                              child: Text("NO",
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                  ))),
+                                      e.isCall && e.bid == 0
+                                          ? Text(
+                                              " DC",
+                                              style: TextStyle(
+                                                color: Colors.orange,
+                                                fontFamily: "Lucida",
+                                                fontStyle: FontStyle.italic,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            )
+                                          : e.isCall
+                                              ? Image.asset(
+                                                  "assets/${e.orderedColor}.png",
+                                                  height: 20,
+                                                )
+                                              : Container(),
+                                      e.isWith
+                                          ? Text(
+                                              "W",
+                                              style: TextStyle(
+                                                color: Colors.blue,
+                                                fontFamily: "Lucida",
+                                                fontStyle: FontStyle.italic,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            )
+                                          : Container(),
+                                      e.risk != "No Risk"
+                                          ? Text(
+                                              returnRiskSymbol(e.risk),
+                                              style: TextStyle(
+                                                color: Colors.redAccent,
+                                                fontFamily: "Lucida",
+                                                fontStyle: FontStyle.italic,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            )
+                                          : Container(),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            roundsScores.length > rounds.length
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: roundsScores[indx + 1].map((e) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text(
+                                          e.toString(),
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: "Lucida",
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              rounds.removeAt(indx);
-                                            });
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10),
-                                              child: Text("YES",
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                  ))),
-                                        ),
-                                      ],
-                                    );
-                                  });
-                            }
-                          : () {},
-                      style: ButtonStyle(
-                        backgroundColor: indx == rounds.length - 1
-                            ? MaterialStateProperty.all(
-                                Colors.redAccent.withOpacity(0.5))
-                            : MaterialStateProperty.all(
-                                Colors.black87.withOpacity(0.5)),
-                        minimumSize: MaterialStateProperty.all(Size.zero),
-                        shape: MaterialStateProperty.all(CircleBorder()),
-                      ),
+                                      );
+                                    }).toList(),
+                                  )
+                                : indx < roundsScores.length - 1
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        mainAxisSize: MainAxisSize.max,
+                                        children:
+                                            roundsScores[indx + 1].map((e) {
+                                          return Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: Text(
+                                              e.toString(),
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontFamily: "Lucida",
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          );
+                                        }).toList(),
+                                      )
+                                    : Container(),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  Builder(builder: (context) {
+                    int sum = 0;
+                    rounds[indx].forEach(
+                      (e) {
+                        sum += e.bid;
+                      },
+                    );
+                    int game = sum - 13;
+                    return Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(40.0),
+                          color: game.isNegative
+                              ? Color.fromRGBO(200, 0, 3, 1.0)
+                              : Color.fromRGBO(0, 200, 3, 1)),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(5.0),
                         child: Text(
-                          (indx + 1).toString(),
+                          game.isNegative ? "-${game.abs()}" : "+${game.abs()}",
                           style: TextStyle(
+                            color: Colors.white,
                             fontFamily: "Lucida",
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w900,
                           ),
-                          softWrap: false,
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: rounds[indx].map((e) {
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      e.bid.toString(),
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: "Lucida",
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    e.isCall
-                                        ? Image.asset(
-                                            "assets/${e.orderedColor}.png",
-                                            height: 20,
-                                          )
-                                        : Container(),
-                                    e.isWith
-                                        ? Text(
-                                            "W",
-                                            style: TextStyle(
-                                              color: Colors.blue,
-                                              fontFamily: "Lucida",
-                                              fontStyle: FontStyle.italic,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          )
-                                        : Container(),
-                                    e.risk != "No Risk"
-                                        ? Text(
-                                            "R",
-                                            style: TextStyle(
-                                              color: Colors.redAccent,
-                                              fontFamily: "Lucida",
-                                              fontStyle: FontStyle.italic,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          )
-                                        : Container(),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Text(
-                                  e.score.toString(),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: "Lucida",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              )
-                            ],
-                          );
-                        }).toList(),
-                      ),
-                    )
-                  ],
-                ),
+                    );
+                  })
+                ],
               );
             },
           ),
@@ -315,18 +432,21 @@ class _gameScState extends ConsumerState<gameSc> {
   Future<void> addNewRound(List<Player> args) async {
     try {
       List<inGamePlayer> newRound = await showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext ctx) {
           return alert(args);
         },
       );
-      if (newRound != null) {
-        setState(() {
-          print("adding round...........");
+      setState(() {
+        print("adding round...........");
+        if (newRound != null)
           rounds.add(newRound);
-        });
-        print(rounds.length);
-      }
+        else {
+          ref.read(biddingProvider.notifier).state = false;
+        }
+      });
+      print(rounds.length);
     } catch (e) {
       print(e);
       ref.read(biddingProvider.notifier).state =
@@ -340,18 +460,33 @@ class _gameScState extends ConsumerState<gameSc> {
   Future<void> endround(List<inGamePlayer> round) async {
     try {
       List<inGamePlayer> alerty = await showDialog(
+          //barrierDismissible: false,
           context: context,
           builder: (_) {
             return alert2(round);
           });
-      if (alerty != null) {
-        //ref.read(biddingProvider.notifier).state=!ref.read(biddingProvider.notifier).state;
+      List<int> latest = roundsScores.last;
+      List<int> newScore = alerty.map((e) => e.score).toList();
+      List<int> upScore = [0, 0, 0, 0];
+      for (int i = 0; i < 4; ++i) {
+        upScore[i] = latest[i] + newScore[i];
       }
+
+      setState(() {
+        roundsScores.add(upScore);
+      });
     } catch (e) {
       print("nothing");
       ref.read(biddingProvider.notifier).state =
           !ref.read(biddingProvider.notifier).state;
     }
+  }
+
+  String returnRiskSymbol(String risk) {
+    if (risk == 'Risk') return 'R';
+    if (risk == '2x Risk') return '2R';
+    if (risk == '3x Risk') return '3R';
+    return ' ';
   }
 }
 
@@ -379,6 +514,13 @@ class _alert2State extends ConsumerState<alert2> {
     super.initState();
   }
 
+  List<FocusNode> focusList = [
+    FocusNode(),
+    FocusNode(),
+    FocusNode(),
+    FocusNode()
+  ];
+
   @override
   Widget build(BuildContext context) {
     var rnd = widget.rnd;
@@ -400,6 +542,7 @@ class _alert2State extends ConsumerState<alert2> {
         ),
         content: Consumer(
           builder: (ctx, ref, ch) {
+            PageController _pageContt = PageController(viewportFraction: 0.7);
             final players = ref.watch(playersProvider.notifier);
             return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
@@ -408,146 +551,185 @@ class _alert2State extends ConsumerState<alert2> {
                     print("taaaaaaaap");
                     FocusScope.of(context).unfocus();
                   },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        height: sz.height * 0.4,
-                        width: sz.width / 1.5,
-                        child: Form(
-                          key: formKey,
-                          child: PageView.builder(
-                              controller:
-                                  PageController(viewportFraction: 0.88),
-                              itemCount: 4,
-                              itemBuilder: (_, indx) {
-                                return Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 15),
-                                  //width: sz.width * 0.8,
-                                  //height: sz.width * 0.8,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
+                  child: Container(
+                    height: sz.height * 0.25,
+                    width: sz.width / 1.5,
+                    child: Form(
+                      key: formKey,
+                      child: PageView.builder(
+                          allowImplicitScrolling: true,
+                          onPageChanged: (value) {
+                            FocusScope.of(context)
+                                .requestFocus(focusList[value]);
+                          },
+                          controller: _pageContt,
+                          itemCount: 4,
+                          itemBuilder: (_, indx) {
+                            return SingleChildScrollView(
+                              child: Container(
+                                margin: EdgeInsets.symmetric(horizontal: 15),
+                                //width: sz.width * 0.8,
+                                //height: sz.width * 0.8,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color:
+                                                Color.fromRGBO(200, 0, 3, 1.0),
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(40)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            Gargs[indx].imgAsset,
+                                            scale: 6,
+                                          ),
+                                          Text(
+                                            Gargs[indx].name,
+                                            style: const TextStyle(
                                               color: Color.fromRGBO(
                                                   200, 0, 3, 1.0),
-                                              width: 2,
+                                              fontFamily: "Lucida",
+                                              fontStyle: FontStyle.italic,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(40)),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Image.asset(
-                                              Gargs[indx].imgAsset,
-                                              scale: 6,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Stack(
+                                      fit: StackFit.loose,
+                                      alignment: Alignment.centerRight,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.all(10),
+                                          child: TextFormField(
+                                            focusNode: focusList[indx],
+                                            autofocus: true,
+                                            onFieldSubmitted: ((value) {
+                                              goNextPage(_pageContt);
+                                            }),
+                                            onChanged: (res) {},
+                                            style: TextStyle(
+                                              fontFamily: "Lucida",
+                                              fontStyle: FontStyle.italic,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 18,
                                             ),
-                                            Text(
-                                              Gargs[indx].name +
-                                                  "'s Bid" +
-                                                  "\n" +
-                                                  rnd[indx].bid.toString(),
-                                              style: const TextStyle(
+                                            textAlign: TextAlign.start,
+                                            controller: calls[indx],
+                                            validator: (s) {
+                                              if (int.parse(s!) > 13)
+                                                return "Can't be more than 13";
+                                            },
+                                            keyboardType: TextInputType.number,
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(40),
+                                              ),
+                                              labelText:
+                                                  "Number of tricks Collected",
+                                              labelStyle: const TextStyle(
                                                 color: Color.fromRGBO(
                                                     200, 0, 3, 1.0),
                                                 fontFamily: "Lucida",
                                                 fontStyle: FontStyle.italic,
-                                                fontSize: 18,
                                                 fontWeight: FontWeight.w600,
+                                                fontSize: 20,
                                               ),
-                                              textAlign: TextAlign.center,
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.all(10),
-                                        child: TextFormField(
-                                          onChanged: (res) {},
+                                        Container(
+                                          margin: EdgeInsets.only(right: 25),
+                                          child: ElevatedButton(
+                                            onPressed: () {},
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 8.0),
+                                              child: Text(
+                                                "/ " + rnd[indx].bid.toString(),
+                                                style: TextStyle(
+                                                  fontFamily: "Lucida",
+                                                  fontStyle: FontStyle.italic,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                            ),
+                                            style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Color.fromRGBO(
+                                                            200, 0, 3, 1.0)),
+                                                shape:
+                                                    MaterialStateProperty.all(
+                                                        RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topLeft: Radius
+                                                              .circular(15.0),
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                  15.0),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  40.0),
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                  40.0)),
+                                                ))),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: indx != 3
+                                          ? (() {
+                                              goNextPage(_pageContt);
+                                            })
+                                          : () async {
+                                              await endScoring(rnd, context);
+                                            },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Text(
+                                          "Done",
                                           style: TextStyle(
                                             fontFamily: "Lucida",
                                             fontStyle: FontStyle.italic,
                                             fontWeight: FontWeight.w600,
                                             fontSize: 18,
                                           ),
-                                          textAlign: TextAlign.center,
-                                          controller: calls[indx],
-                                          validator: (s) {
-                                            if (int.parse(s!) > 13)
-                                              return "Can't be more than 13";
-                                          },
-                                          keyboardType: TextInputType.number,
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(40),
-                                            ),
-                                            labelText:
-                                                "Number of tricks Collected",
-                                            labelStyle: const TextStyle(
-                                              color: Color.fromRGBO(
-                                                  200, 0, 3, 1.0),
-                                              fontFamily: "Lucida",
-                                              fontStyle: FontStyle.italic,
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 20,
-                                            ),
-                                          ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                );
-                              }),
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            if (players.getSumBids() == 13) {
-                              Fluttertoast.cancel();
-                              Fluttertoast.showToast(
-                                msg: "sum of all bids can't be 13",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                              );
-                            } else {
-                              //ref.read(playersProvider.notifier).state=[];
-                              print("round ended");
-                              for (TextEditingController call in calls) {
-                                print(call.text);
-                              }
-
-                              rnd = await updateScores(calls, rnd);
-                              Navigator.pop(context, rnd);
-                            }
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            "Done",
-                            style: TextStyle(
-                              fontFamily: "Lucida",
-                              fontStyle: FontStyle.italic,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Color.fromRGBO(200, 0, 3, 1.0)),
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40.0),
-                            ))),
-                      ),
-                    ],
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Color.fromRGBO(
+                                                      200, 0, 3, 1.0)),
+                                          shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(40.0),
+                                          ))),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                    ),
                   ),
                 );
               },
@@ -555,6 +737,38 @@ class _alert2State extends ConsumerState<alert2> {
           },
         ));
     return alert;
+  }
+
+  void goNextPage(PageController _pageContt) {
+    _pageContt.animateToPage((_pageContt.page! + 1).toInt(),
+        duration: Duration(milliseconds: 400), curve: Curves.easeIn);
+  }
+
+  Future<void> endScoring(List<inGamePlayer> rnd, BuildContext context) async {
+    if (formKey.currentState!.validate()) {
+      int sum = 0;
+      for (TextEditingController call in calls) {
+        sum += int.parse(call.text);
+      }
+      if (sum != 13) {
+        Fluttertoast.cancel();
+        Fluttertoast.showToast(
+            msg: "sum of all bids must be 13",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            fontSize: 18,
+            backgroundColor: Color.fromRGBO(200, 0, 3, 0.5));
+      } else {
+        //ref.read(playersProvider.notifier).state=[];
+        print("round ended");
+        for (TextEditingController call in calls) {
+          print(call.text);
+        }
+
+        rnd = await updateScores(calls, rnd);
+        Navigator.pop(context, rnd);
+      }
+    }
   }
 
   Future<List<inGamePlayer>> updateScores(
@@ -632,11 +846,11 @@ class _alert2State extends ConsumerState<alert2> {
             } else {
               rnd[i].score -= score.dashLoseOver;
             }
-            continue;
+            //continue;
           } else if (rnd[i].bid >= 8) {
             //Big Calls
             rnd[i].score -= (pow(rnd[i].bid, 2) / 2).round();
-            continue;
+            //continue;
           } else {
             //basic
             rnd[i].score -= score.lose +
@@ -691,22 +905,49 @@ class alertState extends ConsumerState<alert>
     ];
   }
 
+  List<FocusNode> focusList = [
+    FocusNode(),
+    FocusNode(),
+    FocusNode(),
+    FocusNode()
+  ];
+
+  List<GlobalKey<FormState>> formKeys = [
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>()
+  ];
+
   @override
   Widget build(BuildContext context) {
     print("building alert");
     final sz = MediaQuery.of(context).size;
 
     AlertDialog alert = AlertDialog(
-        title: const Text(
-          "New Round",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Color.fromRGBO(200, 0, 3, 1.0),
-            fontFamily: "Lucida",
-            fontStyle: FontStyle.italic,
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-          ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+              margin: EdgeInsets.only(right: 32),
+              child: const Text(
+                "New Round",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color.fromRGBO(200, 0, 3, 1.0),
+                  fontFamily: "Lucida",
+                  fontStyle: FontStyle.italic,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(Icons.close))
+          ],
         ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(40.0)),
@@ -714,8 +955,8 @@ class alertState extends ConsumerState<alert>
         content: Consumer(
           builder: (ctx, ref, ch) {
             final players = ref.watch(playersProvider.notifier);
-            return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
+            return Builder(
+              builder: (BuildContext context) {
                 var colors = [
                   'No Trump',
                   'spades',
@@ -724,258 +965,296 @@ class alertState extends ConsumerState<alert>
                   'clubs'
                 ];
                 var riskStatus = ['No Risk', 'Risk', '2x Risk', '3x Risk'];
-
-                return GestureDetector(
-                  onTap: () {
-                    print("taaaaaaaap");
-                    FocusScope.of(context).unfocus();
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        height: sz.height * 0.4,
-                        width: sz.width / 1.5,
-                        child: Form(
-                          key: formKey,
-                          child: PageView.builder(
-                              controller:
-                                  PageController(viewportFraction: 0.88),
-                              itemCount: 4,
-                              itemBuilder: (_, indx) {
-                                return Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 15),
-                                  //width: sz.width * 0.8,
-                                  //height: sz.width * 0.8,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
+                PageController _pageCont =
+                    PageController(viewportFraction: 0.7);
+                return Container(
+                  height: sz.height * 0.44,
+                  width: sz.width / 1.5,
+                  child: PageView.builder(
+                      allowImplicitScrolling: true,
+                      onPageChanged: (value) {
+                        FocusScope.of(context).requestFocus(focusList[value]);
+                      },
+                      controller: _pageCont,
+                      itemCount: 4,
+                      itemBuilder: (_, indx) {
+                        return SingleChildScrollView(
+                          child: StatefulBuilder(builder:
+                              (BuildContext context, StateSetter setState) {
+                            return Form(
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              key: formKeys[indx],
+                              child: Container(
+                                margin: EdgeInsets.symmetric(horizontal: 15),
+                                //width: sz.width * 0.8,
+                                //height: sz.width * 0.8,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color:
+                                                Color.fromRGBO(200, 0, 3, 1.0),
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(40)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            Gargs[indx].imgAsset,
+                                            scale: 6,
+                                          ),
+                                          Text(
+                                            Gargs[indx].name + "\n's Bid",
+                                            style: const TextStyle(
                                               color: Color.fromRGBO(
                                                   200, 0, 3, 1.0),
-                                              width: 2,
+                                              fontFamily: "Lucida",
+                                              fontStyle: FontStyle.italic,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(40)),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Image.asset(
-                                              Gargs[indx].imgAsset,
-                                              scale: 6,
-                                            ),
-                                            Text(
-                                              Gargs[indx].name + "'s Bid",
-                                              style: const TextStyle(
-                                                color: Color.fromRGBO(
-                                                    200, 0, 3, 1.0),
-                                                fontFamily: "Lucida",
-                                                fontStyle: FontStyle.italic,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                      Container(
-                                        margin: EdgeInsets.all(10),
-                                        child: TextFormField(
-                                          onChanged: (res) {
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.all(10),
+                                      child: TextFormField(
+                                        focusNode: focusList[indx],
+                                        autofocus: /*indx == 0 ? true : false*/ true,
+                                        onFieldSubmitted: (value) {
+                                          focusList[indx].unfocus();
+                                        },
+                                        //enabled: true,
+                                        onChanged: (res) {
+                                          try {
                                             ref
                                                 .read(playersProvider.notifier)
                                                 .setBid(indx, int.parse(res));
-                                          },
-                                          style: TextStyle(
+                                            //focusList[indx].unfocus();
+                                          } catch (e) {
+                                            print(e);
+                                          }
+                                        },
+                                        style: TextStyle(
+                                          fontFamily: "Lucida",
+                                          fontStyle: FontStyle.italic,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                        controller: calls[indx],
+                                        validator: (s) {
+                                          try {
+                                            if (int.parse(s!) > 13)
+                                              return "Can't be more than 13";
+                                          } catch (e) {
+                                            print(e);
+                                          }
+                                        },
+                                        keyboardType: TextInputType.number,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(40),
+                                          ),
+                                          labelText: "Number of tricks ordered",
+                                          labelStyle: const TextStyle(
+                                            color:
+                                                Color.fromRGBO(200, 0, 3, 1.0),
                                             fontFamily: "Lucida",
                                             fontStyle: FontStyle.italic,
                                             fontWeight: FontWeight.w600,
-                                            fontSize: 18,
+                                            fontSize: 20,
                                           ),
-                                          textAlign: TextAlign.center,
-                                          controller: calls[indx],
-                                          validator: (s) {
-                                            if (int.parse(s!) > 13)
-                                              return "Can't be more than 13";
-                                          },
-                                          keyboardType: TextInputType.number,
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(40),
-                                            ),
-                                            labelText:
-                                                "Number of tricks ordered",
-                                            labelStyle: const TextStyle(
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: sz.width * 0.6,
+                                      child: SwitchListTile.adaptive(
+                                          title: const Text(
+                                            "Is Call",
+                                            style: TextStyle(
                                               color: Color.fromRGBO(
                                                   200, 0, 3, 1.0),
                                               fontFamily: "Lucida",
                                               fontStyle: FontStyle.italic,
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 20,
+                                              fontSize: 18,
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                      Container(
-                                        width: sz.width * 0.6,
-                                        child: SwitchListTile.adaptive(
-                                            title: const Text(
-                                              "Is Call",
-                                              style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    200, 0, 3, 1.0),
-                                                fontFamily: "Lucida",
-                                                fontStyle: FontStyle.italic,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 18,
+                                          value: ref
+                                              .watch(playersProvider.notifier)
+                                              .state[indx]
+                                              .isCall,
+                                          //autofocus: true,
+                                          onChanged: (val) {
+                                            //FocusScope.of(context).unfocus();
+                                            setState(
+                                              () {
+                                                ref
+                                                    .read(playersProvider
+                                                        .notifier)
+                                                    .toggleIsCall(indx);
+                                              },
+                                            );
+                                          }),
+                                    ),
+                                    players.state[indx].isCall &&
+                                            players.state[indx].bid != 0
+                                        ? DropdownButton(
+                                            underline: Container(),
+                                            isDense: true,
+                                            borderRadius:
+                                                BorderRadius.circular(40),
+                                            hint: Opacity(
+                                              opacity: 0.5,
+                                              child: Image.asset(
+                                                "assets/spades.png",
+                                                width: sz.width * 0.08,
                                               ),
                                             ),
-                                            value: ref
-                                                .watch(playersProvider.notifier)
-                                                .state[indx]
-                                                .isCall,
-                                            //autofocus: true ,
-                                            onChanged: (val) {
-                                              FocusScope.of(context).unfocus();
-                                              ref
-                                                  .read(
-                                                      playersProvider.notifier)
-                                                  .toggleIsCall(indx);
-                                            }),
-                                      ),
-                                      players.state[indx].isCall
-                                          ? DropdownButton(
-                                              underline: Container(),
-                                              isDense: true,
-                                              borderRadius:
-                                                  BorderRadius.circular(40),
-                                              hint: Opacity(
-                                                opacity: 0.5,
-                                                child: Image.asset(
-                                                  "assets/spades.png",
-                                                  width: sz.width * 0.08,
+                                            value: players
+                                                .state[indx].orderedColor,
+                                            items: colors.map((e) {
+                                              return DropdownMenuItem(
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Image.asset(
+                                                      "assets/$e.png",
+                                                      width: sz.width * 0.08,
+                                                    ),
+                                                    Text(e),
+                                                  ],
                                                 ),
-                                              ),
-                                              value: players
-                                                  .state[indx].orderedColor,
-                                              items: colors.map((e) {
-                                                return DropdownMenuItem(
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Image.asset(
-                                                        "assets/$e.png",
-                                                        width: sz.width * 0.08,
-                                                      ),
-                                                      Text(e),
-                                                    ],
-                                                  ),
-                                                  value: e,
-                                                );
-                                              }).toList(),
-                                              onChanged: (newVal) {
+                                                value: e,
+                                              );
+                                            }).toList(),
+                                            onChanged: (newVal) {
+                                              setState(() {
                                                 ref
                                                     .read(playersProvider
                                                         .notifier)
                                                     .setOColor(indx,
                                                         newVal.toString());
-                                              })
-                                          : Divider(),
-                                      Container(
-                                        width: sz.width * 0.6,
-                                        child: SwitchListTile.adaptive(
-                                            title: const Text(
-                                              "Is With",
-                                              style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    200, 0, 3, 1.0),
-                                                fontFamily: "Lucida",
-                                                fontStyle: FontStyle.italic,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 18,
-                                              ),
+                                              });
+                                            })
+                                        : Divider(),
+                                    Container(
+                                      width: sz.width * 0.6,
+                                      child: SwitchListTile.adaptive(
+                                          title: const Text(
+                                            "Is With",
+                                            style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  200, 0, 3, 1.0),
+                                              fontFamily: "Lucida",
+                                              fontStyle: FontStyle.italic,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 18,
                                             ),
-                                            value: players.state[indx].isWith,
-                                            onChanged: (val) {
-                                              FocusScope.of(context).unfocus();
+                                          ),
+                                          value: players.state[indx].isWith,
+                                          onChanged: (val) {
+                                            setState(() {
                                               ref
                                                   .read(
                                                       playersProvider.notifier)
                                                   .toggleIsWith(indx);
-                                            }),
-                                      ),
-                                      DropdownButton(
-                                        borderRadius:
-                                            BorderRadius.circular(40.0),
-                                        value: players.state[indx].risk,
-                                        items: riskStatus.map((e) {
-                                          return DropdownMenuItem(
-                                            value: e,
-                                            child: Text(e),
-                                          );
-                                        }).toList(),
-                                        onChanged: (newVal) {
+                                            });
+                                          }),
+                                    ),
+                                    DropdownButton(
+                                      borderRadius: BorderRadius.circular(40.0),
+                                      value: players.state[indx].risk,
+                                      items: riskStatus.map((e) {
+                                        return DropdownMenuItem(
+                                          value: e,
+                                          child: Text(e),
+                                        );
+                                      }).toList(),
+                                      onChanged: (newVal) {
+                                        setState(() {
                                           ref
                                               .read(playersProvider.notifier)
                                               .setRisk(indx, newVal.toString());
+                                        });
+                                      },
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 8.0),
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          indx != 3
+                                              ? nextPage(_pageCont)
+                                              : endBidding(players, context);
                                         },
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }),
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            if (players.getSumBids() == 13) {
-                              Fluttertoast.cancel();
-                              Fluttertoast.showToast(
-                                msg: "sum of all bids can't be 13",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                              );
-                            } else {
-                              List<inGamePlayer> round = players.state;
-                              Navigator.pop(context, round);
-                            }
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            "Done",
-                            style: TextStyle(
-                              fontFamily: "Lucida",
-                              fontStyle: FontStyle.italic,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Color.fromRGBO(200, 0, 3, 1.0)),
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40.0),
-                            ))),
-                      ),
-                    ],
-                  ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Text(
+                                            "Done",
+                                            style: TextStyle(
+                                              fontFamily: "Lucida",
+                                              fontStyle: FontStyle.italic,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                        ),
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Color.fromRGBO(
+                                                        200, 0, 3, 1.0)),
+                                            shape: MaterialStateProperty.all(
+                                                RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(40.0),
+                                            ))),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                        );
+                      }),
                 );
               },
             );
           },
         ));
     return alert;
+  }
+
+  void endBidding(gamePlayers players, BuildContext context) {
+    if (players.getSumBids() == 13) {
+      Fluttertoast.cancel();
+      Fluttertoast.showToast(
+          msg: "sum of all bids can't be 13",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          fontSize: 18,
+          backgroundColor: Color.fromRGBO(200, 0, 3, 0.5));
+    } else {
+      List<inGamePlayer> round = players.state;
+      Navigator.pop(context, round);
+    }
+  }
+
+  void nextPage(PageController _pageCont) {
+    _pageCont.animateToPage((_pageCont.page! + 1.0).toInt(),
+        duration: Duration(milliseconds: 400), curve: Curves.easeIn);
   }
 
   @override
