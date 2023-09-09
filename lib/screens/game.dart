@@ -76,65 +76,69 @@ class _gameScState extends ConsumerState<gameSc> {
             right: 0,
             top: sz.height * 0.13,
             child: Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.max,
                   children: args.asMap().entries.map((entry) {
-                int idx = entry.key;
-                Player e = entry.value;
-                return Container(
-                  padding: const EdgeInsets.all(8.0),
-                  margin: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: Column(
-                    children: [
-                      Stack(
-                        alignment: Alignment.bottomCenter,
+                    int idx = entry.key;
+                    Player e = entry.value;
+                    return Container(
+                      padding: const EdgeInsets.all(8.0),
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: ref.watch(themeProvider) != ThemeMode.dark
-                                  ? Colors.black.withOpacity(0.1)
-                                  : Colors.white.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            width: sz.width * 0.15,
-                            child: Image.asset(e.imgAsset),
+                          Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color:
+                                      ref.watch(themeProvider) != ThemeMode.dark
+                                          ? Colors.black.withOpacity(0.1)
+                                          : Colors.white.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                width: 50,
+                                child: Image.asset(e.imgAsset),
+                              ),
+                              roundsScores.length > 1 && idx == kingIndx
+                                  ? Image.asset(
+                                      "assets/king.png",
+                                      width: 50,
+                                      //height: 50,
+                                    )
+                                  : Container(),
+                              roundsScores.length > 1 && idx == kuuzIndx
+                                  ? Image.asset(
+                                      "assets/kuz.png",
+                                      width: 50,
+                                      //height: 50,
+                                    )
+                                  : Container(),
+                            ],
                           ),
-                          roundsScores.length > 1 && idx == kingIndx
-                              ? Image.asset(
-                                  "assets/king.png",
-                                  width: 80,
-                                  height: 80,
-                                )
-                              : Container(),
-                          roundsScores.length > 1 && idx == kuuzIndx
-                              ? Image.asset(
-                                  "assets/kuz.png",
-                                  width: 80,
-                                  height: 80,
-                                )
-                              : Container(),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                            child: Text(
+                              e.name,
+                              style: const TextStyle(
+                                //color: Colors.black,
+                                fontFamily: "Lucida",
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ],
                       ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        child: Text(
-                          e.name,
-                          style: const TextStyle(
-                            //color: Colors.black,
-                            fontFamily: "Lucida",
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList()),
+                    );
+                  }).toList()),
             )),
         Container(
           margin:
@@ -169,11 +173,12 @@ class _gameScState extends ConsumerState<gameSc> {
                                           ),
                                           actionsAlignment:
                                               MainAxisAlignment.spaceEvenly,
-                                          contentPadding: EdgeInsets.all(20.0),
+                                          contentPadding:
+                                              const EdgeInsets.all(20.0),
                                           content: Text(
                                             "Are you sure you want to remove round #${indx + 1} ?",
                                             textAlign: TextAlign.center,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontFamily: "Lucida",
                                               fontSize: 20,
                                               fontWeight: FontWeight.w600,
@@ -196,9 +201,10 @@ class _gameScState extends ConsumerState<gameSc> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               40)),
-                                                  padding: EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
                                                       horizontal: 10),
-                                                  child: Text("NO",
+                                                  child: const Text("NO",
                                                       style: TextStyle(
                                                         fontSize: 18,
                                                         fontWeight:
@@ -234,13 +240,14 @@ class _gameScState extends ConsumerState<gameSc> {
                                                 Navigator.of(context).pop();
                                               },
                                               child: Container(
-                                                  padding: EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
                                                       horizontal: 10),
                                                   decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               40)),
-                                                  child: Text("YES",
+                                                  child: const Text("YES",
                                                       style: TextStyle(
                                                         fontSize: 18,
                                                         fontWeight:
@@ -259,13 +266,14 @@ class _gameScState extends ConsumerState<gameSc> {
                                 : MaterialStateProperty.all(
                                     Colors.black87.withOpacity(0.4)),
                             minimumSize: MaterialStateProperty.all(Size.zero),
-                            shape: MaterialStateProperty.all(CircleBorder()),
+                            shape:
+                                MaterialStateProperty.all(const CircleBorder()),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               (indx + 1).toString(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontFamily: "Lucida",
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
@@ -287,7 +295,7 @@ class _gameScState extends ConsumerState<gameSc> {
                                     children: [
                                       Text(
                                         e.bid.toString(),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           //color: Colors.black,
                                           fontFamily: "Lucida",
                                           fontSize: 14,
@@ -295,7 +303,7 @@ class _gameScState extends ConsumerState<gameSc> {
                                         ),
                                       ),
                                       e.isCall && e.bid == 0
-                                          ? Text(
+                                          ? const Text(
                                               " DC",
                                               style: TextStyle(
                                                 color: Colors.orange,
@@ -312,7 +320,7 @@ class _gameScState extends ConsumerState<gameSc> {
                                                 )
                                               : Container(),
                                       e.isWith
-                                          ? Text(
+                                          ? const Text(
                                               "W",
                                               style: TextStyle(
                                                 color: Colors.blue,
@@ -326,7 +334,7 @@ class _gameScState extends ConsumerState<gameSc> {
                                       e.risk != "No Risk"
                                           ? Text(
                                               returnRiskSymbol(e.risk),
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 color: Colors.redAccent,
                                                 fontFamily: "Lucida",
                                                 fontStyle: FontStyle.italic,
@@ -350,7 +358,7 @@ class _gameScState extends ConsumerState<gameSc> {
                                         padding: const EdgeInsets.all(10.0),
                                         child: Text(
                                           e.toString(),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             //color: Colors.black,
                                             fontFamily: "Lucida",
                                             fontSize: 16,
@@ -371,7 +379,7 @@ class _gameScState extends ConsumerState<gameSc> {
                                             padding: const EdgeInsets.all(10.0),
                                             child: Text(
                                               e.toString(),
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 color: Colors.black,
                                                 fontFamily: "Lucida",
                                                 fontSize: 16,
@@ -399,13 +407,13 @@ class _gameScState extends ConsumerState<gameSc> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(40.0),
                           color: game.isNegative
-                              ? Color.fromRGBO(224, 40, 74, 1.0)
-                              : Color.fromRGBO(0, 200, 3, 1)),
+                              ? const Color.fromRGBO(224, 40, 74, 1.0)
+                              : const Color.fromRGBO(0, 200, 3, 1)),
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Text(
                           game.isNegative ? "-${game.abs()}" : "+${game.abs()}",
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontFamily: "Lucida",
                             fontSize: 18,
@@ -462,9 +470,9 @@ class _gameScState extends ConsumerState<gameSc> {
       );
       setState(() {
         print("adding round...........");
-        if (newRound != null)
+        if (newRound != null) {
           rounds.add(newRound);
-        else {
+        } else {
           ref.read(biddingProvider.notifier).state = false;
         }
       });
@@ -597,7 +605,8 @@ class _alert2State extends ConsumerState<alert2> {
                           itemBuilder: (_, indx) {
                             return SingleChildScrollView(
                               child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: 15),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 15),
                                 //width: sz.width * 0.8,
                                 //height: sz.width * 0.8,
                                 child: Column(
@@ -606,7 +615,7 @@ class _alert2State extends ConsumerState<alert2> {
                                     Container(
                                       decoration: BoxDecoration(
                                           border: Border.all(
-                                            color: Color.fromRGBO(
+                                            color: const Color.fromRGBO(
                                                 224, 40, 74, 1.0),
                                             width: 2,
                                           ),
@@ -640,7 +649,7 @@ class _alert2State extends ConsumerState<alert2> {
                                       alignment: Alignment.centerRight,
                                       children: [
                                         Container(
-                                          margin: EdgeInsets.all(10),
+                                          margin: const EdgeInsets.all(10),
                                           child: TextFormField(
                                             focusNode: focusList[indx],
                                             autofocus: true,
@@ -648,7 +657,7 @@ class _alert2State extends ConsumerState<alert2> {
                                               goNextPage(_pageContt);
                                             }),
                                             onChanged: (res) {},
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontFamily: "Lucida",
                                               fontStyle: FontStyle.italic,
                                               fontWeight: FontWeight.w600,
@@ -680,7 +689,8 @@ class _alert2State extends ConsumerState<alert2> {
                                           ),
                                         ),
                                         Container(
-                                          margin: EdgeInsets.only(right: 25),
+                                          margin:
+                                              const EdgeInsets.only(right: 25),
                                           child: ElevatedButton(
                                             onPressed: () {},
                                             child: Padding(
@@ -689,7 +699,7 @@ class _alert2State extends ConsumerState<alert2> {
                                                       vertical: 8.0),
                                               child: Text(
                                                 "/ " + rnd[indx].bid.toString(),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontFamily: "Lucida",
                                                   fontStyle: FontStyle.italic,
                                                   fontWeight: FontWeight.w600,
@@ -700,11 +710,10 @@ class _alert2State extends ConsumerState<alert2> {
                                             style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
-                                                        Color.fromRGBO(
+                                                        const Color.fromRGBO(
                                                             224, 40, 74, 1.0)),
-                                                shape:
-                                                    MaterialStateProperty.all(
-                                                        RoundedRectangleBorder(
+                                                shape: MaterialStateProperty.all(
+                                                    const RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.only(
                                                           topLeft: Radius
@@ -731,8 +740,8 @@ class _alert2State extends ConsumerState<alert2> {
                                           : () async {
                                               await endScoring(rnd, context);
                                             },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(10),
                                         child: Text(
                                           "Done",
                                           style: TextStyle(
@@ -746,7 +755,7 @@ class _alert2State extends ConsumerState<alert2> {
                                       style: ButtonStyle(
                                           backgroundColor:
                                               MaterialStateProperty.all(
-                                                  Color.fromRGBO(
+                                                  const Color.fromRGBO(
                                                       224, 40, 74, 1.0)),
                                           shape: MaterialStateProperty.all(
                                               RoundedRectangleBorder(
@@ -771,7 +780,7 @@ class _alert2State extends ConsumerState<alert2> {
 
   void goNextPage(PageController _pageContt) {
     _pageContt.animateToPage((_pageContt.page! + 1).toInt(),
-        duration: Duration(milliseconds: 400), curve: Curves.easeIn);
+        duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
   }
 
   Future<void> endScoring(List<inGamePlayer> rnd, BuildContext context) async {
@@ -787,7 +796,7 @@ class _alert2State extends ConsumerState<alert2> {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             fontSize: 18,
-            backgroundColor: Color.fromRGBO(224, 40, 74, 0.5));
+            backgroundColor: const Color.fromRGBO(224, 40, 74, 0.5));
       } else {
         //ref.read(playersProvider.notifier).state=[];
         print("round ended");
@@ -959,7 +968,7 @@ class alertState extends ConsumerState<alert>
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Container(
-              margin: EdgeInsets.only(right: 32),
+              margin: const EdgeInsets.only(right: 32),
               child: const Text(
                 "New Round",
                 textAlign: TextAlign.center,
@@ -976,7 +985,7 @@ class alertState extends ConsumerState<alert>
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                icon: Icon(Icons.close))
+                icon: const Icon(Icons.close))
           ],
         ),
         shape: const RoundedRectangleBorder(
@@ -1016,7 +1025,8 @@ class alertState extends ConsumerState<alert>
                                   AutovalidateMode.onUserInteraction,
                               key: formKeys[indx],
                               child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: 15),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 15),
                                 //width: sz.width * 0.8,
                                 //height: sz.width * 0.8,
                                 child: Column(
@@ -1025,7 +1035,7 @@ class alertState extends ConsumerState<alert>
                                     Container(
                                       decoration: BoxDecoration(
                                           border: Border.all(
-                                            color: Color.fromRGBO(
+                                            color: const Color.fromRGBO(
                                                 224, 40, 74, 1.0),
                                             width: 2,
                                           ),
@@ -1054,7 +1064,7 @@ class alertState extends ConsumerState<alert>
                                       ),
                                     ),
                                     Container(
-                                      margin: EdgeInsets.all(10),
+                                      margin: const EdgeInsets.all(10),
                                       child: TextFormField(
                                         focusNode: focusList[indx],
                                         autofocus: /*indx == 0 ? true : false*/ true,
@@ -1072,7 +1082,7 @@ class alertState extends ConsumerState<alert>
                                             print(e);
                                           }
                                         },
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontFamily: "Lucida",
                                           fontStyle: FontStyle.italic,
                                           fontWeight: FontWeight.w600,
@@ -1178,7 +1188,7 @@ class alertState extends ConsumerState<alert>
                                                         newVal.toString());
                                               });
                                             })
-                                        : Divider(),
+                                        : const Divider(),
                                     Container(
                                       width: sz.width * 0.6,
                                       child: SwitchListTile.adaptive(
@@ -1228,8 +1238,8 @@ class alertState extends ConsumerState<alert>
                                               ? nextPage(_pageCont)
                                               : endBidding(players, context);
                                         },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(10),
                                           child: Text(
                                             "Done",
                                             style: TextStyle(
@@ -1243,7 +1253,7 @@ class alertState extends ConsumerState<alert>
                                         style: ButtonStyle(
                                             backgroundColor:
                                                 MaterialStateProperty.all(
-                                                    Color.fromRGBO(
+                                                    const Color.fromRGBO(
                                                         224, 40, 74, 1.0)),
                                             shape: MaterialStateProperty.all(
                                                 RoundedRectangleBorder(
@@ -1275,7 +1285,7 @@ class alertState extends ConsumerState<alert>
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           fontSize: 18,
-          backgroundColor: Color.fromRGBO(224, 40, 74, 0.5));
+          backgroundColor: const Color.fromRGBO(224, 40, 74, 0.5));
     } else {
       List<inGamePlayer> round = players.state;
       Navigator.pop(context, round);
@@ -1284,7 +1294,7 @@ class alertState extends ConsumerState<alert>
 
   void nextPage(PageController _pageCont) {
     _pageCont.animateToPage((_pageCont.page! + 1.0).toInt(),
-        duration: Duration(milliseconds: 400), curve: Curves.easeIn);
+        duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
   }
 
   @override

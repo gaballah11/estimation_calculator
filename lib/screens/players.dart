@@ -489,7 +489,7 @@ class _playersScState extends State<playersSc> {
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: Color.fromRGBO(224, 40, 74, 1.0),
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(40))),
@@ -502,7 +502,7 @@ class _playersScState extends State<playersSc> {
               child: const Text(
                 "Cancel",
                 style: TextStyle(
-                  color: Colors.red,
+                  color: Color.fromRGBO(224, 40, 74, 1.0),
                   fontFamily: "Lucida",
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.w600,

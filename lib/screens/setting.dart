@@ -59,48 +59,51 @@ class _settingScState extends State<settingSc> {
             )),
         Container(
             margin: EdgeInsets.only(top: sz.height * 0.175),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  ListTile(
-                    title: const Text(
-                      "Scoring system",
-                      style: TextStyle(
-                        //color: Colors.black,
-                        fontFamily: "Lucida",
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: const Text(
+                        "Scoring system",
+                        style: TextStyle(
+                          //color: Colors.black,
+                          fontFamily: "Lucida",
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                        ),
                       ),
-                    ),
-                    leading: const Icon(
-                      Icons.paste_rounded,
-                      color: Colors.red,
-                    ),
-                    onTap: () {
-                      showScoringAlert(context);
-                    },
-                  ),
-                  ListTile(
-                    title: const Text(
-                      "Theme",
-                      style: TextStyle(
-                        //color: Colors.black,
-                        fontFamily: "Lucida",
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
+                      leading: const Icon(
+                        Icons.paste_rounded,
+                        color: Color.fromRGBO(224, 40, 74, 1.0),
                       ),
+                      onTap: () {
+                        showScoringAlert(context);
+                      },
                     ),
-                    leading: const Icon(
-                      Icons.brush_rounded,
-                      color: Colors.red,
-                    ),
-                    onTap: () {
-                      showThemeAlert(context);
-                    },
-                  )
-                ],
+                    ListTile(
+                      title: const Text(
+                        "Theme",
+                        style: TextStyle(
+                          //color: Colors.black,
+                          fontFamily: "Lucida",
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                        ),
+                      ),
+                      leading: const Icon(
+                        Icons.brush_rounded,
+                        color: Color.fromRGBO(224, 40, 74, 1.0),
+                      ),
+                      onTap: () {
+                        showThemeAlert(context);
+                      },
+                    )
+                  ],
+                ),
               ),
             )),
       ],
