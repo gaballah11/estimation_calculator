@@ -66,7 +66,7 @@ class _settingScState extends State<settingSc> {
                     title: const Text(
                       "Scoring system",
                       style: TextStyle(
-                        color: Colors.black,
+                        //color: Colors.black,
                         fontFamily: "Lucida",
                         fontStyle: FontStyle.italic,
                         fontWeight: FontWeight.w600,
@@ -85,7 +85,7 @@ class _settingScState extends State<settingSc> {
                     title: const Text(
                       "Theme",
                       style: TextStyle(
-                        color: Colors.black,
+                        //color: Colors.black,
                         fontFamily: "Lucida",
                         fontStyle: FontStyle.italic,
                         fontWeight: FontWeight.w600,
@@ -123,7 +123,7 @@ class _settingScState extends State<settingSc> {
         "Scoring System",
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: Color.fromRGBO(200, 0, 3, 1.0),
+          color: Color.fromRGBO(224, 40, 74, 1.0),
           fontFamily: "Lucida",
           fontStyle: FontStyle.italic,
           fontSize: 24,
@@ -161,7 +161,7 @@ class _settingScState extends State<settingSc> {
                         title: const Text(
                           "Double when Three Calls",
                           style: TextStyle(
-                            color: Color.fromRGBO(200, 0, 3, 1.0),
+                            color: Color.fromRGBO(224, 40, 74, 1.0),
                             fontFamily: "Lucida",
                             fontStyle: FontStyle.italic,
                             fontWeight: FontWeight.w600,
@@ -295,7 +295,7 @@ class themeAlertState extends ConsumerState<themeAlert>
         "Theme",
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: Color.fromRGBO(200, 0, 3, 1.0),
+          color: Color.fromRGBO(224, 40, 74, 1.0),
           fontFamily: "Lucida",
           fontStyle: FontStyle.italic,
           fontSize: 24,
@@ -390,7 +390,7 @@ buildInputLabel(String s, TextEditingController win) {
         ),
         labelText: s,
         labelStyle: const TextStyle(
-          color: Color.fromRGBO(200, 0, 3, 1.0),
+          color: Color.fromRGBO(224, 40, 74, 1.0),
           fontFamily: "Lucida",
           fontStyle: FontStyle.italic,
           fontWeight: FontWeight.w600,

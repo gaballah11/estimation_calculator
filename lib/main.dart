@@ -38,12 +38,17 @@ class _MyAppState extends ConsumerState<MyApp> {
           },
           themeMode: themeState,
           darkTheme: ThemeData(
-            colorSchemeSeed: Color.fromRGBO(200, 0, 3, 1.0),
-            brightness: Brightness.dark,
-          ),
+              colorSchemeSeed: Color.fromRGBO(180, 25, 53, 0.498),
+              //switchTheme: SwitchThemeData(),
+              brightness: Brightness.dark,
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                  style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(Color.fromRGBO(224, 40, 74, 1.0)),
+              ))),
           theme: ThemeData(
             //useMaterial3: true,
-            colorSchemeSeed: Color.fromRGBO(200, 0, 3, 1.0),
+            colorSchemeSeed: Color.fromRGBO(224, 40, 74, 1.0),
           ),
           home: const MyHomePage(),
         );

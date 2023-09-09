@@ -31,6 +31,7 @@ dependencies:
   flutter_riverpod:
   hooks_riverpod:
   fluttertoast:
+  widget_mask:
   flutter:
     sdk: flutter
 
@@ -63,6 +64,11 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/add_button.png
+    - assets/play_button.png
+    - assets/menu_button.png
+    - assets/start_button.png
+    - assets/done_button.png
     - assets/top.png
     - assets/bottom.png
     - assets/logo-01.png
@@ -74,7 +80,10 @@ flutter:
     - assets/diamonds.png
     - assets/No Trump.png
     - assets/spades.png
+    - assets/king.png
+    - assets/kuz.png
     - assets/charachters/
+    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

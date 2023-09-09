@@ -57,20 +57,40 @@ class _playersScState extends State<playersSc> {
                 gradient: LinearGradient(
               colors: [
                 Color.fromRGBO(0, 0, 0, 0.0),
-                Color.fromRGBO(127, 0, 3, 0.5)
+                Color.fromRGBO(224, 40, 74, 0.5)
               ],
               begin: Alignment(0.0, 0.0),
               end: Alignment.bottomCenter,
             )),
           ),
           Opacity(
-            opacity: 0.02,
+            opacity: 0.03,
             child: Image.asset(
               "assets/back.png",
               height: sz.height,
               fit: BoxFit.cover,
             ),
           ),
+          players.isEmpty
+              ? Opacity(
+                  opacity: 0.5,
+                  child: Align(
+                      alignment: Alignment(0, 0),
+                      child: Text(
+                        "add new players \nto be able to start a game\n(at least 4 players)",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: "Lucida",
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          letterSpacing: 2,
+                          wordSpacing: 5,
+                          height: 2,
+                        ),
+                      )),
+                )
+              : Container(),
           Align(
               alignment: const Alignment(0, -0.9),
               child: Image.asset(
@@ -84,30 +104,18 @@ class _playersScState extends State<playersSc> {
                 child: Row(
                   children: [
                     Container(
-                      width: 80,
-                      height: 80,
-                      child: button(
-                        "Menu",
-                        Container(
-                          margin: EdgeInsets.only(top: 8, left: 8),
-                          width: 40,
-                          height: 40,
-                          child: Icon(
-                            Icons.short_text_rounded,
-                            color: Colors.white,
-                            size: sz.width * 0.07,
+                        width: 70,
+                        height: 70,
+                        child: GestureDetector(
+                          onTap: () {
+                            showDropDownMenuAlert(context);
+                          },
+                          child: Image.asset(
+                            "assets/menu_button.png",
+                            width: 70,
+                            height: 70,
                           ),
-                        ),
-                        () {
-                          print(sz);
-                          print(sz.aspectRatio);
-
-                          setState(() {});
-
-                          showDropDownMenuAlert(context);
-                        },
-                      ),
-                    ),
+                        )),
                     const SizedBox(
                       width: 20,
                     ),
@@ -158,7 +166,7 @@ class _playersScState extends State<playersSc> {
                                   gravity: ToastGravity.BOTTOM,
                                   fontSize: 18,
                                   backgroundColor:
-                                      Color.fromRGBO(200, 0, 3, 0.5));
+                                      Color.fromRGBO(224, 40, 74, 0.5));
                               print(selected);
                             }
                           }
@@ -169,7 +177,7 @@ class _playersScState extends State<playersSc> {
                             borderRadius: BorderRadius.circular(40),
                             side: selected.contains(e)
                                 ? const BorderSide(
-                                    color: Color.fromRGBO(200, 0, 3, 1.0),
+                                    color: Color.fromRGBO(224, 40, 74, 1.0),
                                     width: 3)
                                 : BorderSide.none,
                           ),
@@ -187,7 +195,7 @@ class _playersScState extends State<playersSc> {
                                   Container(
                                     decoration: BoxDecoration(
                                         color: selected.contains(e)
-                                            ? Color.fromRGBO(200, 0, 3, 1.0)
+                                            ? Color.fromRGBO(224, 40, 74, 1.0)
                                             : Colors.black54,
                                         shape: BoxShape.rectangle,
                                         borderRadius: BorderRadius.vertical(
@@ -216,7 +224,7 @@ class _playersScState extends State<playersSc> {
                                     ? Icon(
                                         Icons.check_circle_rounded,
                                         size: sz.width * 0.06,
-                                        color: Color.fromRGBO(200, 0, 3, 1.0),
+                                        color: Color.fromRGBO(224, 40, 74, 1.0),
                                       )
                                     : Icon(
                                         Icons.check_circle_outline_rounded,
@@ -307,7 +315,7 @@ class _playersScState extends State<playersSc> {
                                   );
                                 },
                                 icon: Icon(Icons.remove_circle_outline_rounded),
-                                color: Color.fromRGBO(200, 0, 3, 1.0),
+                                color: Color.fromRGBO(224, 40, 74, 1.0),
                               )
                             ],
                           ),
@@ -320,85 +328,55 @@ class _playersScState extends State<playersSc> {
           Align(
             alignment: const Alignment(0.9, 0.7),
             child: Container(
-              width: 80,
-              height: 80,
-              child: button(
-                "new",
-                Container(
-                  margin: EdgeInsets.only(top: 4, left: 4),
-                  width: 40,
-                  height: 40,
-                  alignment: Alignment.center,
-                  child: Icon(
-                    Icons.add_rounded,
-                    color: Colors.white,
-                    size: sz.width * 0.07,
-                  ),
-                ),
-                () {
+              width: 70,
+              height: 70,
+              child: GestureDetector(
+                onTap: () {
                   showPlayerSelection(context);
                 },
+                child: Image.asset(
+                  "assets/add_button.png",
+                  width: 70,
+                  height: 70,
+                  alignment: Alignment.center,
+                ),
               ),
             ),
           ),
           Align(
             alignment: const Alignment(0.9, 0.9),
             child: Container(
-              width: 80,
-              height: 80,
-              child: selected.length < 4
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Container(
-                        foregroundDecoration: const BoxDecoration(
-                          color: Colors.grey,
-                          backgroundBlendMode: BlendMode.saturation,
-                        ),
-                        child: button(
-                          "play",
-                          Container(
-                            margin: EdgeInsets.only(top: 4, left: 4),
-                            width: 40,
-                            height: 40,
-                            alignment: Alignment.center,
-                            child: Icon(
-                              Icons.play_arrow_rounded,
-                              color: Colors.white,
-                              size: sz.width * 0.07,
+                width: 70,
+                height: 70,
+                child: selected.length < 4
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Container(
+                            foregroundDecoration: const BoxDecoration(
+                              color: Colors.grey,
+                              backgroundBlendMode: BlendMode.saturation,
                             ),
-                          ),
-                          () {
-                            Fluttertoast.cancel();
-                            Fluttertoast.showToast(
-                                msg: "Select 4 players to start",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                fontSize: 18,
-                                backgroundColor:
-                                    Color.fromRGBO(200, 0, 3, 0.5));
-                          },
-                        ),
-                      ),
-                    )
-                  : button(
-                      "play",
-                      Container(
-                        margin: EdgeInsets.only(top: 4, left: 4),
-                        width: 40,
-                        height: 40,
-                        alignment: Alignment.center,
-                        child: Icon(
-                          Icons.play_arrow_rounded,
-                          color: Colors.white,
-                          size: sz.width / 10,
-                        ),
-                      ),
-                      () {
-                        Navigator.of(context)
-                            .pushNamed(gameSc.routename, arguments: selected);
-                      },
-                    ),
-            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                Fluttertoast.cancel();
+                                Fluttertoast.showToast(
+                                    msg: "Select 4 players to start",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    fontSize: 18,
+                                    backgroundColor:
+                                        Color.fromRGBO(224, 40, 74, 0.5));
+                              },
+                              child: Image.asset("assets/play_button.png"),
+                            )),
+                      )
+                    : GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed(gameSc.routename, arguments: selected);
+                        },
+                        child: Image.asset("assets/play_button.png"),
+                      )),
           ),
         ],
       ),
@@ -411,7 +389,7 @@ class _playersScState extends State<playersSc> {
         "Choose your character",
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: Color.fromRGBO(200, 0, 3, 1.0),
+          color: Color.fromRGBO(224, 40, 74, 1.0),
           fontFamily: "Lucida",
           fontStyle: FontStyle.italic,
           fontSize: 24,
@@ -475,7 +453,7 @@ class _playersScState extends State<playersSc> {
                       ),
                       labelText: "Player name",
                       labelStyle: const TextStyle(
-                        color: Color.fromRGBO(200, 0, 3, 1.0),
+                        color: Color.fromRGBO(224, 40, 74, 1.0),
                         fontFamily: "Lucida",
                         fontStyle: FontStyle.italic,
                         fontWeight: FontWeight.w600,
@@ -511,7 +489,7 @@ class _playersScState extends State<playersSc> {
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.red,
+                    backgroundColor: Colors.red,
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(40))),
@@ -569,9 +547,13 @@ class _playersScState extends State<playersSc> {
       //print(temp);
       List<Player> temp2 =
           List<Player>.from(temp.map((e) => Player.fromJson(e)));
-      players = temp2;
+      setState(() {
+        players = temp2;
+      });
     } else {
-      players = [];
+      setState(() {
+        players = [];
+      });
     }
   }
 
@@ -583,7 +565,7 @@ class _playersScState extends State<playersSc> {
         style: TextStyle(
           fontFamily: 'Lucida',
           fontSize: 18,
-          color: Colors.white,
+          //color: Colors.white,
           fontStyle: FontStyle.italic,
           fontWeight: FontWeight.w600,
         ),
@@ -595,13 +577,13 @@ class _playersScState extends State<playersSc> {
   Future<void> showDropDownMenuAlert(BuildContext context) async {
     AlertDialog alert = AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(40),
+        borderRadius: BorderRadius.circular(30),
         side: BorderSide(
-          color: Colors.white,
+          color: const Color.fromRGBO(224, 40, 74, 1.0),
           width: 3,
         ),
       ),
-      backgroundColor: const Color.fromRGBO(200, 0, 3, 1.0),
+      //backgroundColor: Colors.white,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -609,7 +591,7 @@ class _playersScState extends State<playersSc> {
               "Settings",
               Icon(
                 Icons.settings,
-                color: Colors.white,
+                color: const Color.fromRGBO(224, 40, 74, 1.0),
               ), () {
             Navigator.of(context).pushNamed(settingSc.routename);
           }),
@@ -618,7 +600,7 @@ class _playersScState extends State<playersSc> {
               "Statistics",
               Icon(
                 Icons.trending_up_rounded,
-                color: Colors.white,
+                color: const Color.fromRGBO(224, 40, 74, 1.0),
               ),
               () {}),
           Divider(),
@@ -626,7 +608,7 @@ class _playersScState extends State<playersSc> {
             "Rules",
             Icon(
               Icons.paste,
-              color: Colors.white,
+              color: const Color.fromRGBO(224, 40, 74, 1.0),
             ),
             () {},
           )

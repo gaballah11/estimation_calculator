@@ -44,7 +44,7 @@ class _homeScreenState extends State<homeScreen> {
                   gradient: LinearGradient(
                 colors: [
                   Color.fromRGBO(0, 0, 0, 0),
-                  Color.fromRGBO(127, 0, 3, 0.5)
+                  Color.fromRGBO(224, 40, 74, 0.5)
                 ],
                 begin: Alignment(0.0, 0.0),
                 end: Alignment.bottomCenter,
@@ -116,18 +116,16 @@ class _homeScreenState extends State<homeScreen> {
               duration: Duration(seconds: 2),
               child: Align(
                 child: Container(
-                  margin: EdgeInsets.only(top: 200),
-                  child: button(
-                      "START",
-                      Icon(
-                        Icons.play_arrow_rounded,
-                        color: Colors.white,
-                        size: (sz.width / 10) * 2,
-                      ), () {
-                    //print("button pressed");
-                    Navigator.of(context).pushNamed(playersSc.routename);
-                  }),
-                ),
+                    margin: EdgeInsets.only(top: 200),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(playersSc.routename);
+                      },
+                      child: Image.asset(
+                        "assets/start_button.png",
+                        width: 280,
+                      ),
+                    )),
               ),
             ),
           ],

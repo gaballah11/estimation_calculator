@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:estimation_calculator/modules/inGamePlayer.dart';
 import 'package:estimation_calculator/modules/player.dart';
+import 'package:estimation_calculator/modules/theme.dart';
 import 'package:estimation_calculator/screens/setting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,8 @@ class gameSc extends ConsumerStatefulWidget {
 
 late var Gargs = null;
 late List<inGamePlayer> players;
+int kingIndx = 0;
+int kuuzIndx = 3;
 
 List<List<int>> roundsScores = [
   [0, 0, 0, 0]
@@ -32,8 +35,6 @@ List<List<int>> roundsScores = [
 
 class _gameScState extends ConsumerState<gameSc> {
   List<List<inGamePlayer>> rounds = [];
-  int kingIndx = 0;
-  int kuzIndx = 3;
   //bool _test = false;
   bool bidding = false;
 
@@ -77,19 +78,42 @@ class _gameScState extends ConsumerState<gameSc> {
             child: Container(
               padding: EdgeInsets.all(20),
               child: Row(
-                  children: args.map((e) {
+                  children: args.asMap().entries.map((entry) {
+                int idx = entry.key;
+                Player e = entry.value;
                 return Container(
                   padding: const EdgeInsets.all(8.0),
                   margin: const EdgeInsets.symmetric(horizontal: 2.0),
                   child: Column(
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black12,
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        width: sz.width * 0.15,
-                        child: Image.asset(e.imgAsset),
+                      Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: ref.watch(themeProvider) != ThemeMode.dark
+                                  ? Colors.black.withOpacity(0.1)
+                                  : Colors.white.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            width: sz.width * 0.15,
+                            child: Image.asset(e.imgAsset),
+                          ),
+                          roundsScores.length > 1 && idx == kingIndx
+                              ? Image.asset(
+                                  "assets/king.png",
+                                  width: 80,
+                                  height: 80,
+                                )
+                              : Container(),
+                          roundsScores.length > 1 && idx == kuuzIndx
+                              ? Image.asset(
+                                  "assets/kuz.png",
+                                  width: 80,
+                                  height: 80,
+                                )
+                              : Container(),
+                        ],
                       ),
                       SizedBox(
                         height: 5,
@@ -98,7 +122,7 @@ class _gameScState extends ConsumerState<gameSc> {
                         child: Text(
                           e.name,
                           style: const TextStyle(
-                            color: Colors.black,
+                            //color: Colors.black,
                             fontFamily: "Lucida",
                             fontStyle: FontStyle.italic,
                             fontWeight: FontWeight.w600,
@@ -242,10 +266,10 @@ class _gameScState extends ConsumerState<gameSc> {
                             child: Text(
                               (indx + 1).toString(),
                               style: TextStyle(
-                                fontFamily: "Lucida",
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
+                                  fontFamily: "Lucida",
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white70),
                               softWrap: false,
                             ),
                           ),
@@ -264,7 +288,7 @@ class _gameScState extends ConsumerState<gameSc> {
                                       Text(
                                         e.bid.toString(),
                                         style: TextStyle(
-                                          color: Colors.black,
+                                          //color: Colors.black,
                                           fontFamily: "Lucida",
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,
@@ -327,7 +351,7 @@ class _gameScState extends ConsumerState<gameSc> {
                                         child: Text(
                                           e.toString(),
                                           style: TextStyle(
-                                            color: Colors.black,
+                                            //color: Colors.black,
                                             fontFamily: "Lucida",
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
@@ -375,7 +399,7 @@ class _gameScState extends ConsumerState<gameSc> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(40.0),
                           color: game.isNegative
-                              ? Color.fromRGBO(200, 0, 3, 1.0)
+                              ? Color.fromRGBO(224, 40, 74, 1.0)
                               : Color.fromRGBO(0, 200, 3, 1)),
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
@@ -403,26 +427,24 @@ class _gameScState extends ConsumerState<gameSc> {
               width: 80,
               height: 80,
               child: Consumer(builder: (context, ref, _) {
-                return FloatingActionButton(
-                  backgroundColor: Color.fromRGBO(200, 0, 3, 1.0),
-                  mini: true,
-                  onPressed: () {
-                    if (!biddingW) {
-                      ref.read(playersProvider.notifier).state = [];
-                      for (Player p in args) {
-                        ref.read(playersProvider.notifier).add(p);
-                      }
-                    } else {
-                      ref.read(playersProvider.notifier).state = [];
-                    }
-                    biddingW ? endround(rounds.last) : addNewRound(Gargs);
-                    ref.read(biddingProvider.notifier).state = !biddingW;
-                  },
-                  tooltip: 'Bids',
-                  child: biddingW
-                      ? Icon(Icons.done_rounded, size: 40.0)
-                      : Icon(Icons.add_rounded, size: 40.0),
-                );
+                return biddingW
+                    ? GestureDetector(
+                        onTap: () {
+                          ref.read(playersProvider.notifier).state = [];
+                          endround(rounds.last);
+                          ref.read(biddingProvider.notifier).state = !biddingW;
+                        },
+                        child: Image.asset("assets/done_button.png"))
+                    : GestureDetector(
+                        onTap: () {
+                          ref.read(playersProvider.notifier).state = [];
+                          for (Player p in args) {
+                            ref.read(playersProvider.notifier).add(p);
+                          }
+                          addNewRound(Gargs);
+                          ref.read(biddingProvider.notifier).state = !biddingW;
+                        },
+                        child: Image.asset("assets/add_button.png"));
               })),
         ),
       ],
@@ -474,6 +496,7 @@ class _gameScState extends ConsumerState<gameSc> {
 
       setState(() {
         roundsScores.add(upScore);
+        updateRanks();
       });
     } catch (e) {
       print("nothing");
@@ -488,6 +511,13 @@ class _gameScState extends ConsumerState<gameSc> {
     if (risk == '3x Risk') return '3R';
     return ' ';
   }
+}
+
+void updateRanks() {
+  kingIndx = roundsScores.last.indexOf(roundsScores.last.max);
+  kuuzIndx = roundsScores.last.indexOf(roundsScores.last.min);
+  print("KingIndex: " + kingIndx.toString());
+  print("kuuzIndex: " + kuuzIndx.toString());
 }
 
 class alert2 extends ConsumerStatefulWidget {
@@ -530,7 +560,7 @@ class _alert2State extends ConsumerState<alert2> {
           "End Round",
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Color.fromRGBO(200, 0, 3, 1.0),
+            color: Color.fromRGBO(224, 40, 74, 1.0),
             fontFamily: "Lucida",
             fontStyle: FontStyle.italic,
             fontSize: 24,
@@ -576,8 +606,8 @@ class _alert2State extends ConsumerState<alert2> {
                                     Container(
                                       decoration: BoxDecoration(
                                           border: Border.all(
-                                            color:
-                                                Color.fromRGBO(200, 0, 3, 1.0),
+                                            color: Color.fromRGBO(
+                                                224, 40, 74, 1.0),
                                             width: 2,
                                           ),
                                           borderRadius:
@@ -594,7 +624,7 @@ class _alert2State extends ConsumerState<alert2> {
                                             Gargs[indx].name,
                                             style: const TextStyle(
                                               color: Color.fromRGBO(
-                                                  200, 0, 3, 1.0),
+                                                  224, 40, 74, 1.0),
                                               fontFamily: "Lucida",
                                               fontStyle: FontStyle.italic,
                                               fontSize: 18,
@@ -640,7 +670,7 @@ class _alert2State extends ConsumerState<alert2> {
                                                   "Number of tricks Collected",
                                               labelStyle: const TextStyle(
                                                 color: Color.fromRGBO(
-                                                    200, 0, 3, 1.0),
+                                                    224, 40, 74, 1.0),
                                                 fontFamily: "Lucida",
                                                 fontStyle: FontStyle.italic,
                                                 fontWeight: FontWeight.w600,
@@ -671,7 +701,7 @@ class _alert2State extends ConsumerState<alert2> {
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
                                                         Color.fromRGBO(
-                                                            200, 0, 3, 1.0)),
+                                                            224, 40, 74, 1.0)),
                                                 shape:
                                                     MaterialStateProperty.all(
                                                         RoundedRectangleBorder(
@@ -717,7 +747,7 @@ class _alert2State extends ConsumerState<alert2> {
                                           backgroundColor:
                                               MaterialStateProperty.all(
                                                   Color.fromRGBO(
-                                                      200, 0, 3, 1.0)),
+                                                      224, 40, 74, 1.0)),
                                           shape: MaterialStateProperty.all(
                                               RoundedRectangleBorder(
                                             borderRadius:
@@ -757,7 +787,7 @@ class _alert2State extends ConsumerState<alert2> {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             fontSize: 18,
-            backgroundColor: Color.fromRGBO(200, 0, 3, 0.5));
+            backgroundColor: Color.fromRGBO(224, 40, 74, 0.5));
       } else {
         //ref.read(playersProvider.notifier).state=[];
         print("round ended");
@@ -934,7 +964,7 @@ class alertState extends ConsumerState<alert>
                 "New Round",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Color.fromRGBO(200, 0, 3, 1.0),
+                  color: Color.fromRGBO(224, 40, 74, 1.0),
                   fontFamily: "Lucida",
                   fontStyle: FontStyle.italic,
                   fontSize: 24,
@@ -995,8 +1025,8 @@ class alertState extends ConsumerState<alert>
                                     Container(
                                       decoration: BoxDecoration(
                                           border: Border.all(
-                                            color:
-                                                Color.fromRGBO(200, 0, 3, 1.0),
+                                            color: Color.fromRGBO(
+                                                224, 40, 74, 1.0),
                                             width: 2,
                                           ),
                                           borderRadius:
@@ -1013,7 +1043,7 @@ class alertState extends ConsumerState<alert>
                                             Gargs[indx].name + "\n's Bid",
                                             style: const TextStyle(
                                               color: Color.fromRGBO(
-                                                  200, 0, 3, 1.0),
+                                                  224, 40, 74, 1.0),
                                               fontFamily: "Lucida",
                                               fontStyle: FontStyle.italic,
                                               fontSize: 18,
@@ -1066,8 +1096,8 @@ class alertState extends ConsumerState<alert>
                                           ),
                                           labelText: "Number of tricks ordered",
                                           labelStyle: const TextStyle(
-                                            color:
-                                                Color.fromRGBO(200, 0, 3, 1.0),
+                                            color: Color.fromRGBO(
+                                                224, 40, 74, 1.0),
                                             fontFamily: "Lucida",
                                             fontStyle: FontStyle.italic,
                                             fontWeight: FontWeight.w600,
@@ -1083,7 +1113,7 @@ class alertState extends ConsumerState<alert>
                                             "Is Call",
                                             style: TextStyle(
                                               color: Color.fromRGBO(
-                                                  200, 0, 3, 1.0),
+                                                  224, 40, 74, 1.0),
                                               fontFamily: "Lucida",
                                               fontStyle: FontStyle.italic,
                                               fontWeight: FontWeight.w600,
@@ -1156,7 +1186,7 @@ class alertState extends ConsumerState<alert>
                                             "Is With",
                                             style: TextStyle(
                                               color: Color.fromRGBO(
-                                                  200, 0, 3, 1.0),
+                                                  224, 40, 74, 1.0),
                                               fontFamily: "Lucida",
                                               fontStyle: FontStyle.italic,
                                               fontWeight: FontWeight.w600,
@@ -1214,7 +1244,7 @@ class alertState extends ConsumerState<alert>
                                             backgroundColor:
                                                 MaterialStateProperty.all(
                                                     Color.fromRGBO(
-                                                        200, 0, 3, 1.0)),
+                                                        224, 40, 74, 1.0)),
                                             shape: MaterialStateProperty.all(
                                                 RoundedRectangleBorder(
                                               borderRadius:
@@ -1245,7 +1275,7 @@ class alertState extends ConsumerState<alert>
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           fontSize: 18,
-          backgroundColor: Color.fromRGBO(200, 0, 3, 0.5));
+          backgroundColor: Color.fromRGBO(224, 40, 74, 0.5));
     } else {
       List<inGamePlayer> round = players.state;
       Navigator.pop(context, round);

@@ -68,7 +68,7 @@ class _buttonState extends State<button> {
                   : EdgeInsets.only(top: 25, right: 10, bottom: 5),
               child: _icon,
             ),
-            Container(
+            /*Container(
               margin: EdgeInsets.only(bottom: 10),
               decoration: BoxDecoration(
                 color: Color.fromRGBO(127, 0, 3, 0.4),
@@ -89,7 +89,7 @@ class _buttonState extends State<button> {
                   ),
                 ),
               ),
-            )
+            )*/
           ],
         ),
       ),
