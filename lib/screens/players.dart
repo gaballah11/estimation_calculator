@@ -72,7 +72,7 @@ class _playersScState extends State<playersSc> {
             ),
           ),
           players.isEmpty
-              ? Opacity(
+              ? const Opacity(
                   opacity: 0.5,
                   child: Align(
                       alignment: Alignment(0, 0),
@@ -100,7 +100,7 @@ class _playersScState extends State<playersSc> {
           Align(
               alignment: const Alignment(-0.9, -0.65),
               child: Container(
-                margin: EdgeInsets.only(left: 25),
+                margin: const EdgeInsets.only(left: 25),
                 child: Row(
                   children: [
                     Container(
@@ -140,7 +140,7 @@ class _playersScState extends State<playersSc> {
                 return Container(
                   margin: EdgeInsets.only(top: sz.height * 0.24),
                   child: GridView.count(
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     mainAxisSpacing: 20,
                     crossAxisSpacing: 15,
                     crossAxisCount: 2,
@@ -166,7 +166,7 @@ class _playersScState extends State<playersSc> {
                                   gravity: ToastGravity.BOTTOM,
                                   fontSize: 18,
                                   backgroundColor:
-                                      Color.fromRGBO(224, 40, 74, 0.5));
+                                      const Color.fromRGBO(224, 40, 74, 0.5));
                               print(selected);
                             }
                           }
@@ -174,7 +174,7 @@ class _playersScState extends State<playersSc> {
                         child: Card(
                           elevation: 10,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(40),
+                            borderRadius: BorderRadius.circular(35),
                             side: selected.contains(e)
                                 ? const BorderSide(
                                     color: Color.fromRGBO(224, 40, 74, 1.0),
@@ -195,13 +195,15 @@ class _playersScState extends State<playersSc> {
                                   Container(
                                     decoration: BoxDecoration(
                                         color: selected.contains(e)
-                                            ? Color.fromRGBO(224, 40, 74, 1.0)
+                                            ? const Color.fromRGBO(
+                                                224, 40, 74, 1.0)
                                             : Colors.black54,
                                         shape: BoxShape.rectangle,
-                                        borderRadius: BorderRadius.vertical(
-                                            bottom: Radius.circular(40.0))),
+                                        borderRadius:
+                                            const BorderRadius.vertical(
+                                                bottom: Radius.circular(35.0))),
                                     alignment: Alignment.topCenter,
-                                    padding: EdgeInsets.all(7),
+                                    padding: const EdgeInsets.all(7),
                                     //width: double.infinity,
                                     height: 37.5,
                                     child: Text(
@@ -219,103 +221,29 @@ class _playersScState extends State<playersSc> {
                                 ],
                               ),
                               Align(
-                                alignment: Alignment(-0.8, -0.8),
+                                alignment: const Alignment(-0.8, -0.8),
                                 child: selected.contains(e)
                                     ? Icon(
                                         Icons.check_circle_rounded,
                                         size: sz.width * 0.06,
-                                        color: Color.fromRGBO(224, 40, 74, 1.0),
+                                        color: const Color.fromRGBO(
+                                            224, 40, 74, 1.0),
                                       )
                                     : Icon(
                                         Icons.check_circle_outline_rounded,
                                         size: sz.width * 0.06,
                                       ),
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(40.0)),
-                                        ),
-                                        actionsAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        contentPadding: EdgeInsets.all(20.0),
-                                        content: Text(
-                                          "Are you sure you want delete that player?",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontFamily: "Lucida",
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        actions: [
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 10),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            40)),
-                                                child: Text("NO",
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ))),
-                                            style: ButtonStyle(
-                                                shape: MaterialStateProperty
-                                                    .all(RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    40.0)))),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              setState(() {
-                                                players.remove(e);
-                                                selected.remove(e);
-                                              });
-                                              addPlayersToDatabase();
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 10),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            40)),
-                                                child: Text("YES",
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ))),
-                                            style: ButtonStyle(
-                                                shape: MaterialStateProperty
-                                                    .all(RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    40.0)))),
-                                          )
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                icon: Icon(Icons.remove_circle_outline_rounded),
-                                color: Color.fromRGBO(224, 40, 74, 1.0),
+                              Align(
+                                alignment: Alignment(0.95, -0.95),
+                                child: IconButton(
+                                  onPressed: () {
+                                    deleteAlertDialog(context, e);
+                                  },
+                                  icon: const Icon(
+                                      Icons.remove_circle_outline_rounded),
+                                  color: const Color.fromRGBO(224, 40, 74, 1.0),
+                                ),
                               )
                             ],
                           ),
@@ -365,7 +293,7 @@ class _playersScState extends State<playersSc> {
                                     gravity: ToastGravity.BOTTOM,
                                     fontSize: 18,
                                     backgroundColor:
-                                        Color.fromRGBO(224, 40, 74, 0.5));
+                                        const Color.fromRGBO(224, 40, 74, 0.5));
                               },
                               child: Image.asset("assets/play_button.png"),
                             )),
@@ -380,6 +308,71 @@ class _playersScState extends State<playersSc> {
           ),
         ],
       ),
+    );
+  }
+
+  void deleteAlertDialog(BuildContext context, Player e) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(40.0)),
+          ),
+          actionsAlignment: MainAxisAlignment.spaceEvenly,
+          contentPadding: const EdgeInsets.all(20.0),
+          content: const Text(
+            "Are you sure you want delete that player?",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: "Lucida",
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(40)),
+                  child: const Text("NO",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ))),
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40.0)))),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                setState(() {
+                  players.remove(e);
+                  selected.remove(e);
+                });
+                addPlayersToDatabase();
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(40)),
+                  child: const Text("YES",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ))),
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40.0)))),
+            )
+          ],
+        );
+      },
     );
   }
 
@@ -423,11 +416,11 @@ class _playersScState extends State<playersSc> {
                       key: _swiperkey,
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     height: 20,
                   ),
                   TextFormField(
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: "Lucida",
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.w600,
@@ -437,7 +430,8 @@ class _playersScState extends State<playersSc> {
                     autofocus: true,
                     controller: playername,
                     validator: (val) {
-                      final photoIndx = _swiperkey.currentState!.currentIndex;
+                      var photoIndx = _swiperkey.currentState!.currentIndex;
+                      photoIndx < 19 ? photoIndx += 2 : photoIndx = photoIndx;
                       Player p = Player(
                           name: val!, imgAsset: characters[photoIndx % 19]);
                       if (val.length < 3) {
@@ -466,11 +460,12 @@ class _playersScState extends State<playersSc> {
               ),
             ),
             Container(
-              margin: EdgeInsets.all(10),
+              margin: const EdgeInsets.all(10),
               child: ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    final photoIndx = _swiperkey.currentState!.currentIndex;
+                    var photoIndx = _swiperkey.currentState!.currentIndex;
+                    photoIndx < 19 ? photoIndx += 2 : photoIndx = photoIndx;
                     Player p = Player(
                         name: playername.text,
                         imgAsset: characters[photoIndx % 19]);
@@ -489,8 +484,9 @@ class _playersScState extends State<playersSc> {
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromRGBO(224, 40, 74, 1.0),
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    backgroundColor: const Color.fromRGBO(224, 40, 74, 1.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(40))),
               ),
@@ -562,7 +558,7 @@ class _playersScState extends State<playersSc> {
       leading: icon,
       title: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           fontFamily: 'Lucida',
           fontSize: 18,
           //color: Colors.white,
@@ -578,8 +574,8 @@ class _playersScState extends State<playersSc> {
     AlertDialog alert = AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
-        side: BorderSide(
-          color: const Color.fromRGBO(224, 40, 74, 1.0),
+        side: const BorderSide(
+          color: Color.fromRGBO(224, 40, 74, 1.0),
           width: 3,
         ),
       ),
@@ -589,26 +585,26 @@ class _playersScState extends State<playersSc> {
         children: [
           buildlistTile(
               "Settings",
-              Icon(
+              const Icon(
                 Icons.settings,
-                color: const Color.fromRGBO(224, 40, 74, 1.0),
+                color: Color.fromRGBO(224, 40, 74, 1.0),
               ), () {
             Navigator.of(context).pushNamed(settingSc.routename);
           }),
-          Divider(),
+          const Divider(),
           buildlistTile(
               "Statistics",
-              Icon(
+              const Icon(
                 Icons.trending_up_rounded,
-                color: const Color.fromRGBO(224, 40, 74, 1.0),
+                color: Color.fromRGBO(224, 40, 74, 1.0),
               ),
               () {}),
-          Divider(),
+          const Divider(),
           buildlistTile(
             "Rules",
-            Icon(
+            const Icon(
               Icons.paste,
-              color: const Color.fromRGBO(224, 40, 74, 1.0),
+              color: Color.fromRGBO(224, 40, 74, 1.0),
             ),
             () {},
           )

@@ -28,6 +28,7 @@ late var Gargs = null;
 late List<inGamePlayer> players;
 int kingIndx = 0;
 int kuuzIndx = 3;
+int Factor = 1;
 
 List<List<int>> roundsScores = [
   [0, 0, 0, 0]

@@ -39,6 +39,7 @@ class charachterSwiperState extends State<charachterSwiper> {
           //itemCount: 19,
           itemBuilder: (_, curr) {
             currentIndex = curr - 1;
+            print(curr);
             return Image.asset(charList[curr % 19]);
           }),
     );
